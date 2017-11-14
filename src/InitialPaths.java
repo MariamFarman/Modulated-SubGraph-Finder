@@ -14,52 +14,49 @@ import java.util.Set;
 
 
 public class InitialPaths {
-	static List<PSheet> pSheetList = new ArrayList<PSheet>();
-	static List<EdgeClass> edgeClassListComplete = new ArrayList<EdgeClass>();
+	static List<GenesInfo> genesInfoList = new ArrayList<GenesInfo>();
+	static List<GenesInteractions> genesInteractionsListComplete = new ArrayList<GenesInteractions>();
 	public static List<ArrayList<String>> Allpaths = new ArrayList<ArrayList<String>>();
-	static List<String> edgeListSet = new ArrayList<String>();
+	static List<String> uniqueGenesInInteraction = new ArrayList<String>();
 	static String Step1Output;
-	static Map<String, Double> psheetKeyValyePair = new HashMap<String, Double>();
-	static Map<String, List<String>> edgeListHashMap = new HashMap<String, List<String>>();
-	static PSheet pSheet = new PSheet();
-	static long THRESHOLD = 2L;
+	static Map<String, Double> genesKeyPValuesPair = new HashMap<String, Double>(); 
+	static Map<String, List<String>> genesKeyInteractionPair = new HashMap<String, List<String>>();
+	static GenesInfo geneInfo = new GenesInfo();
+	static long threshold = 2L;
 	static int rowCounter = 0;
-	static GenericFunctions b;
 
 	public static void main(String[] args) throws Exception {
 		 
 		Step1Output = args[2]+"InitialPaths.text";
 		DataStore.DataStor(args[0],args[1],args[2]);
-		pSheet = DataStore.getpSheet();
-		pSheetList = DataStore.getpSheetList();
-		edgeClassListComplete = DataStore.getedgeClassListComplete();
-		edgeListSet = DataStore.getedgeListSet();
-		psheetKeyValyePair = DataStore.getpsheetKeyValyePair();
-		edgeListHashMap = DataStore.getedgeListHashMap();
-		newTreeImplement();
-		System.out.println("Found Initial Paths....Now finding Extensions and Mergings");
+		geneInfo = DataStore.getpSheet();
+		genesInfoList = DataStore.getpSheetList();
+		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
+		uniqueGenesInInteraction = DataStore.getedgeListSet();
+		genesKeyPValuesPair = DataStore.getpsheetKeyValyePair();
+		genesKeyInteractionPair = DataStore.getedgeListHashMap();
+		identifyingInitialPaths();
+		System.out.println("Found Initial Paths");
 		ExtensionMerging.main(Allpaths);
- 
 	}
 
 	private static List<String> sortpSheetList(List<String> mainValueList) {
 		if (mainValueList == null)
 			return null;
-		List<PSheet> psheetList = new ArrayList<PSheet>();
+		List<GenesInfo> psheetList = new ArrayList<GenesInfo>();
 		List<String> returnList = new ArrayList<>();
 		for (String item : mainValueList) {
-			PSheet temp = new PSheet();
+			GenesInfo temp = new GenesInfo();
 			temp.setGeneName(item);
 			try {
-				temp.setpValue(psheetKeyValyePair.get(item));
+				temp.setpValue(genesKeyPValuesPair.get(item));
 			} catch (Exception e) {
-			//System.out.println("");
 			}
 			if (temp.getpValue() > 0)
 				psheetList.add(temp);
 		}
 		Collections.sort(psheetList);
-		for (PSheet returnL : psheetList) {
+		for (GenesInfo returnL : psheetList) {
 			returnList.add(returnL.getGeneName());
 		}
 		return returnList;
@@ -70,28 +67,23 @@ public class InitialPaths {
 			return 0;
 		} else
 			return counter++;
-
 	}
 
-	private static void newTreeImplement() {
-		Collections.sort(pSheetList);
+	private static void identifyingInitialPaths() {
+		Collections.sort(genesInfoList);
 		Set<String> iterationSet = new HashSet<String>(); // all checked genes
-		int xcas = 1;
-		xcas = 1;
-		for (PSheet psheet : pSheetList) {
-			//System.out.println("***************" + psheet.getGeneName() + " " + psheet.getpValue());
+		for (GenesInfo psheet : genesInfoList) {
 			String rootGeneName = "";
-			xcas = 1;
 			double combinePValue = 0.0;
 			ArrayList<String> selectedGenes = new ArrayList<String>(); // parents genes
 			rootGeneName = psheet.getGeneName();
 			if (iterationSet.contains(rootGeneName))
 				continue;
-			combinePValue = psheetKeyValyePair.get(rootGeneName);
+			combinePValue = genesKeyPValuesPair.get(rootGeneName);
 			iterationSet.add(rootGeneName);
 			if (combinePValue >= 0.99)
 				continue;
-			List<String> interactingGenes = edgeListHashMap.get(rootGeneName);
+			List<String> interactingGenes = genesKeyInteractionPair.get(rootGeneName);
 			interactingGenes = sortpSheetList(interactingGenes); // sorting Interactions on Pvalues
 			selectedGenes.add(rootGeneName);
 			int counterCheck = 0;
@@ -102,24 +94,22 @@ public class InitialPaths {
 				counterCheck++;
 				if (iterationSet.contains(genekey))
 					continue;
-				double genePValue = psheetKeyValyePair.get(genekey);
+				double genePValue = genesKeyPValuesPair.get(genekey);
 				if (genePValue >= 1.0)
 					continue;
 				List<Double> pavlueListString = new ArrayList<>();
 				pavlueListString.clear();
 				for (String string : selectedGenes) {
-					pavlueListString.add(psheetKeyValyePair.get(string));
+					pavlueListString.add(genesKeyPValuesPair.get(string));
 				}
 				pavlueListString.add(genePValue);
-				double calculationResult = b.hartungFunction(pavlueListString);
+				double calculationResult = GenericFunctions.hartungFunction(pavlueListString);
 				if (calculationResult >= combinePValue)
 					continue;
-				xcas++;
 				iterationSet.add(genekey);
-				//System.err.println(genekey + " ^ " + "  " + genePValue + " ^ " + calculationResult);
 				combinePValue = calculationResult;
 				selectedGenes.add(genekey);
-				List<String> newStringListTemp = edgeListHashMap.get(genekey);
+				List<String> newStringListTemp = genesKeyInteractionPair.get(genekey);
 				List<String> newStringList = new ArrayList<String>();
 				for (String temp : newStringListTemp) {
 					if (iterationSet.contains(temp))
@@ -137,8 +127,7 @@ public class InitialPaths {
 			if (selectedGenes.size() > 2){
 				Allpaths.add(selectedGenes);
 				writeInFIle(selectedGenes, combinePValue);
-			}
-				
+			}			
 		}
 	}
 

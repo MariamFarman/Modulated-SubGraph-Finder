@@ -14,17 +14,15 @@ import java.util.Map;
 
 public class FinalThreads {
 
-
 	
-	static Map<String, List<String>> edgeListHashMap = new HashMap<String, List<String>>();
-	static Map<String, List<String>> edgeListHashMapItIColumn1 = new HashMap<String, List<String>>();
-	static Map<String, List<String>> edgeListHashMapItIColumn2 = new HashMap<String, List<String>>();
-	static Map<String, List<String>> EnsemblData = new HashMap<String, List<String>>();
-	static List<EdgeClass> edgeClassListComplete = new ArrayList<EdgeClass>();
-	static List<String> edgeListSet = new ArrayList<String>();
-	static List<String> Genes = new ArrayList<>();
-	static List<PSheet> pSheetList = new ArrayList<PSheet>();
-	static Map<String, Double> psheetKeyValyePair = new HashMap<String, Double>();
+	static Map<String, List<String>> genesKeyInteractionPair = new HashMap<String, List<String>>();
+	static Map<String, List<String>> interactingGeneFrom = new HashMap<String, List<String>>();
+	static Map<String, List<String>> interactingGeneTo = new HashMap<String, List<String>>();
+	static List<GenesInteractions> genesInteractionsListComplete = new ArrayList<GenesInteractions>();
+	static List<String> uniqueGenesInInteraction = new ArrayList<String>();
+	//static List<String> Genes = new ArrayList<>();
+	static List<GenesInfo> genesInfoList = new ArrayList<GenesInfo>();
+	static Map<String, Double> genesKeyPValuesPair = new HashMap<String, Double>();
 	static int rowCounter = 0;
 	static int sourceGreaterCOunter = 0;
 	static int originalSourceCOunter = 3;
@@ -33,13 +31,13 @@ public class FinalThreads {
 	static String fileoutPathText;
 
 	public static void main (List<ArrayList<String>> AllMergedpaths) throws Exception {	
-	
+		System.out.println("Finding Sources and Sinks");
 		fileoutPathText = DataStore.getOutputPath()+ "FinalOutput.text";
-		pSheetList = DataStore.getpSheetList();
-		edgeClassListComplete = DataStore.getedgeClassListComplete();
-		edgeListSet = DataStore.getedgeListSet();
-		psheetKeyValyePair = DataStore.getpsheetKeyValyePair();
-		edgeListHashMap = DataStore.getedgeListHashMap();
+		genesInfoList = DataStore.getpSheetList();
+		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
+		uniqueGenesInInteraction = DataStore.getedgeListSet();
+		genesKeyPValuesPair = DataStore.getpsheetKeyValyePair();
+		genesKeyInteractionPair = DataStore.getedgeListHashMap();
 		geneInfoHashTable = DataStore.getgeneInfoHashTable();
 		//EnsemblData = DataStore.getEnsemblData();
 		createHashListFromEdegeClassList(0);
@@ -63,7 +61,7 @@ public class FinalThreads {
 		List<Double> pavlueListString = new ArrayList<>();
 		for (String string : genesList) {
 			prepareList.add(string);
-			pavlueListString.add(psheetKeyValyePair.get(string));
+			pavlueListString.add(genesKeyPValuesPair.get(string));
 		}
 
 		double calculationResult = GenericFunctions.hartungFunction(pavlueListString);
@@ -73,7 +71,7 @@ public class FinalThreads {
 			prepareList = new ArrayList<String>();
 			prepareList.add(string);
 			String interactingGenes = "";
-			List<String> getALLInteraction = edgeListHashMap.get(string);
+			List<String> getALLInteraction = genesKeyInteractionPair.get(string);
 			for (String stringX : getALLInteraction) {
 				if (genesList.contains(stringX))
 					interactingGenes = interactingGenes.concat("-" + stringX);
@@ -81,7 +79,7 @@ public class FinalThreads {
 			prepareList.add(interactingGenes);
 			pavlueListString.clear();
 			prepareList.add(geneInfoHashTable.get(string));
-			prepareList.add(String.valueOf(psheetKeyValyePair.get(string)));
+			prepareList.add(String.valueOf(genesKeyPValuesPair.get(string)));
 			prepareList.add(checkGeneSourceSink(genesList, string));
 			/*prepareList.add(EnsemblData.get(string).get(0));
 		    prepareList.add(EnsemblData.get(string).get(1));*/
@@ -101,14 +99,14 @@ public class FinalThreads {
 	}
 
 	private static String checkGeneSourceSink(List<String> genesList, String gene) {
-		EdgeClass edgeClass = new EdgeClass();
+		GenesInteractions edgeClass = new GenesInteractions();
 		edgeClass.getColmn2();
 		List<String> sinkInteraction = new ArrayList<>();
-		sinkInteraction = edgeListHashMapItIColumn1.get(gene);
+		sinkInteraction = interactingGeneFrom.get(gene);
 		if (sinkInteraction.contains(gene))
 			sinkInteraction.remove(gene);
 		List<String> sourceIneraction = new ArrayList<>();
-		sourceIneraction = edgeListHashMapItIColumn2.get(gene);
+		sourceIneraction = interactingGeneTo.get(gene);
 		if (sourceIneraction.contains(gene))
 			sourceIneraction.remove(gene);
 		Boolean sink = false, source = false;
@@ -129,7 +127,6 @@ public class FinalThreads {
 		}
 		if ((!(sink && source)) && (sinkGeneName != null || sourceGeneName != null)) {
 			if (sink) {
-				//System.out.println("sinkGeneName " + gene);
 				return "Sink";
 			}
 			if (source) {
@@ -142,26 +139,26 @@ public class FinalThreads {
 	}
 
 	private static void createHashListFromEdegeClassList(int column) {
-		edgeListHashMap = new HashMap<String, List<String>>();
-		edgeListHashMapItIColumn1 = new HashMap<String, List<String>>();
-		edgeListHashMapItIColumn2 = new HashMap<String, List<String>>();
-		edgeListHashMap = new HashMap<String, List<String>>();
+		genesKeyInteractionPair = new HashMap<String, List<String>>();
+		interactingGeneFrom = new HashMap<String, List<String>>();
+		interactingGeneTo = new HashMap<String, List<String>>();
+		genesKeyInteractionPair = new HashMap<String, List<String>>();
 		int column1 = 0;
 		int column2 = 0;
 
-		for (String uniqueKey : edgeListSet) {
+		for (String uniqueKey : uniqueGenesInInteraction) {
 			List<String> valuesList = new ArrayList<String>();
 			List<String> valuesList1 = new ArrayList<String>();
 			List<String> valuesList2 = new ArrayList<String>();
 			if (column == 0 || column == 2) {
 				column1++;
-				for (EdgeClass edgeClass : edgeClassListComplete) {
+				for (GenesInteractions edgeClass : genesInteractionsListComplete) {
 					if (valuesList.size() > 1000)
 						break;
 					if (edgeClass.getColumn1().equalsIgnoreCase(uniqueKey)) {
 						try {
 							String column2Value = edgeClass.getColmn2().toLowerCase();
-							Double pvalueTemp = psheetKeyValyePair.get(column2Value);
+							Double pvalueTemp = genesKeyPValuesPair.get(column2Value);
 							if (!pvalueTemp.isNaN())
 								if (pvalueTemp > 0 && pvalueTemp < 1) {
 									valuesList.add(column2Value);
@@ -172,17 +169,17 @@ public class FinalThreads {
 						}
 					}
 				}
-				edgeListHashMapItIColumn2.put(uniqueKey.toLowerCase(), valuesList1);
+				interactingGeneTo.put(uniqueKey.toLowerCase(), valuesList1);
 			}
 			if (column == 0 || column == 1) {
 				column2++;
-				for (EdgeClass edgeClass : edgeClassListComplete) {
+				for (GenesInteractions edgeClass : genesInteractionsListComplete) {
 					if (valuesList.size() > 1000)
 						break;
 					if (edgeClass.getColmn2().equalsIgnoreCase(uniqueKey)) {
 						try {
 							String column1Value = edgeClass.getColumn1().toLowerCase();
-							Double pvalueTemp = psheetKeyValyePair.get(column1Value);
+							Double pvalueTemp = genesKeyPValuesPair.get(column1Value);
 							if (!pvalueTemp.isNaN())
 								if (pvalueTemp > 0 && pvalueTemp < 1) {
 									valuesList.add(column1Value);
@@ -193,9 +190,9 @@ public class FinalThreads {
 						}
 					}
 				}
-				edgeListHashMapItIColumn1.put(uniqueKey.toLowerCase(), valuesList2);
+				interactingGeneFrom.put(uniqueKey.toLowerCase(), valuesList2);
 			}
-			edgeListHashMap.put(uniqueKey.toLowerCase(), valuesList);
+			genesKeyInteractionPair.put(uniqueKey.toLowerCase(), valuesList);
 		}
 	}
 

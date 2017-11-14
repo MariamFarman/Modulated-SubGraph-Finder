@@ -7,6 +7,7 @@ import java.util.List;
 import java.math.BigDecimal;
 
 public class GenericFunctions {
+	
 
 	static double hartungFunction(List<Double> pvalueList) {
 		if (pvalueList.size() == 1 || pvalueList == null)
@@ -14,9 +15,7 @@ public class GenericFunctions {
 		List<BigDecimal> qnormList = new ArrayList<>();
 		int n = pvalueList.size();
 		for (Double pavlue : pvalueList) {
-			// System.out.println("pvalue"+pavlue);
 			qnormList.add(new BigDecimal(NormalCDFInverse(pavlue)));
-			// System.out.println("qnormList"+qnormList);
 		}
 		BigDecimal sum = new BigDecimal(0.0);
 		BigDecimal avt = new BigDecimal(0.0);
@@ -24,8 +23,6 @@ public class GenericFunctions {
 			sum = sum.add(qnorm);
 		}
 		BigDecimal num = new BigDecimal(n);
-
-		// System.out.println("num"+num);
 		if (num.compareTo(BigDecimal.ZERO) == 0) {
 			return Double.NaN;
 		}
@@ -42,7 +39,6 @@ public class GenericFunctions {
 		}
 		int xx = n - 1;
 		q = loopSum.divide(BigDecimal.valueOf(xx), 5, RoundingMode.HALF_UP);
-		// System.out.println("q "+q);
 		BigDecimal one = new BigDecimal(1.0);
 		BigDecimal rhohat = one.subtract(q);
 		BigDecimal rhostar = new BigDecimal(0.0);
@@ -157,8 +153,6 @@ public class GenericFunctions {
 		try {
 			returnResult = (new BigDecimal((double) df.parse(formateNormal)));
 		} catch (Exception e) {
-			// e.printStackTrace();
-			//System.out.println("customPowerFucntion resutlt " +result + " ");
 		}
 		return returnResult;
 	}
@@ -190,17 +184,13 @@ public class GenericFunctions {
 		double xbd = xBD.doubleValue();
 		double xMulX = xbd * xbd;
 		double xMulXPoint5 = xMulX * (minuspoint5);
-		// System.out.println(xMulXPoint5);
-		// System.out.println(xMulXPoint5);
 		double Euler = 2.7182818;
 		double minusOneBD = (-1);
 		if (xMulXPoint5 == -1)
 			xMulXPoint5 = xMulXPoint5 * (minusOneBD);
 		double mathEx = Math.pow(Euler, xMulXPoint5);
 		BigDecimal Ex = BigDecimal.valueOf(mathEx);
-		// System.out.println("exp result "+Ex);
 		BigDecimal mathExMulY = Ex.multiply(y);
-		// System.out.println("math-prnomBD "+mathExMulY);
 		BigDecimal mathExMulYMulPoint3 = mathExMulY.multiply(new BigDecimal(0.398942280401));
 		BigDecimal yF = one.subtract(mathExMulYMulPoint3);
 		BigDecimal oneMinusNeg = one.subtract(neg);
@@ -210,6 +200,5 @@ public class GenericFunctions {
 		BigDecimal finalAddition = OneMinusNeg.add(megMultioneMinusY);
 
 		return finalAddition;
-	}
-
+		}
 }

@@ -20,50 +20,42 @@ import java.util.Set;
 
 public class ExtensionMerging {
 
-	static Integer inerLoogCouterStep3 = 0;
-	static Integer inerLoogSizeStep3 = 0;
+	static Integer interactingListCounter = 0; 
+	static Integer interactingListCounterCheck = 0;
 	static List<Integer> alreadyIteratedPath = new ArrayList<>();
 	static List<String> finalizingPath = new ArrayList<>();
 	static List<String> step2GnesDone = new ArrayList<>();
 	static List<String> genesDone = new ArrayList<>();
 	static Set<String> aaa = new HashSet<String>();
-	public static List<ArrayList<String>> AllMergedpaths = new ArrayList<ArrayList<String>>();
-	//static String Step2Output = "/home/farman/ModulatesSubPaths/ExtendedPath.text";
-	//static String Step3Output = "/home/farman/ModulatesSubPaths/MergedPath.text";
-	
-	
+	public static List<ArrayList<String>> AllMergedpaths = new ArrayList<ArrayList<String>>();	
 	static String Step2Output;// = "/home/farman/ModulatesSubPaths/ExtendedPath.text";
-	static String Step3Output;//  = "/home/farman/ModulatesSubPaths/MergedPath.text";
-	
-	
-	static List<PSheet> pSheetList = new ArrayList<PSheet>();
-	static Map<String, Double> psheetKeyValyePair = new HashMap<String, Double>();
-	static List<EdgeClass> edgeClassListComplete = new ArrayList<EdgeClass>();
-	static List<String> edgeListSet = new ArrayList<String>();
-	static PSheet pSheet = new PSheet();
-	static Map<String, List<String>> edgeListHashMap = new HashMap<String, List<String>>();
+	static String Step3Output;//  = "/home/farman/ModulatesSubPaths/MergedPath.text";	
+	static List<GenesInfo> geneInfoList = new ArrayList<GenesInfo>();
+	static Map<String, Double> genesKeyPValuesPair = new HashMap<String, Double>();
+	static List<GenesInteractions> genesInteractionsListComplete = new ArrayList<GenesInteractions>();
+	static List<String> uniqueGenesInInteraction = new ArrayList<String>();
+	static GenesInfo genesInfo = new GenesInfo();
+	static Map<String, List<String>> genesKeyInteractionPair = new HashMap<String, List<String>>();
 	static long THRESHOLD = 2L;
 	static int rowCounter = 0;
 	static List<MergingPojo> mergedPath = new ArrayList<>();
 	static List<Integer> mergedPathPathNumber = new ArrayList<>();
     static Hashtable<Integer, List<String> > hashTableList= new Hashtable<Integer, List<String>> ();
-	static FileInputStream fsIPExcel;
+	static FileInputStream fileInputSteam;
 	static List<StringListSorting> sortingList;
-	static int arrayListSize = 0;
+	static int arrayListSize = 0; 
 
-	
 	public static void main (List<ArrayList<String>> Allpaths) throws Exception {
-		DataStore datasource = DataStore.getInstance();
+		System.out.println("Now Looking for extenion and Merging");
 		Step2Output = DataStore.getOutputPath()+ "ExtendedPath.text";
 		Step3Output = DataStore.getOutputPath()+ "MergedPath.text";		
-		pSheet = DataStore.getpSheet();
-		pSheetList = DataStore.getpSheetList();
-		edgeClassListComplete = DataStore.getedgeClassListComplete();
-		edgeListSet = DataStore.getedgeListSet();
-		psheetKeyValyePair = DataStore.getpsheetKeyValyePair();
-		edgeListHashMap = DataStore.getedgeListHashMap();
+		genesInfo = DataStore.getpSheet();
+		geneInfoList = DataStore.getpSheetList();
+		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
+		uniqueGenesInInteraction = DataStore.getedgeListSet();
+		genesKeyPValuesPair = DataStore.getpsheetKeyValyePair();
+		genesKeyInteractionPair = DataStore.getedgeListHashMap();
 		arrayListSize = Allpaths.size();
-		
 		int listNumer =1;
 		for (ArrayList<String> arrayList : Allpaths) {
 			setGenesList(arrayList, (listNumer));
@@ -73,53 +65,40 @@ public class ExtensionMerging {
 			}
 			
 		}
-		System.out.println("CLass-ExtensioMerging-extendPathAllPaths");
-		extendPathAllPaths();
+		extendingPaths(); 
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("CLass-ExtensioMerging-Return extendPathAllPaths");
 		List<String> tempStringList = null;
 		for (int i = 1; i <= arrayListSize; i++) {
-			//System.gc();
 			tempStringList = getGenesList(i);
 			Integer currentNumber = i;
 			if (alreadyIteratedPath.contains(currentNumber))
 				continue;
 			List<String> sending = tempStringList;
 			try {
-				inerLoogCouterStep3 = 0;
-				inerLoogSizeStep3 = 0;
-				inerLoogSizeStep3 = sending.size();
-				for (inerLoogCouterStep3 = 0; inerLoogCouterStep3 < inerLoogSizeStep3; inerLoogCouterStep3++) {
+				interactingListCounter = 0;
+				interactingListCounterCheck = 0;
+				interactingListCounterCheck = sending.size();
+				for (interactingListCounter = 0; interactingListCounter < interactingListCounterCheck; interactingListCounter++) {
 					String gene = "";
-					gene = sending.get(inerLoogCouterStep3);
-					checkInteractionFunction(gene, i);
+					gene = sending.get(interactingListCounter);
+					mergingPaths(gene, i);
 				}
 			} catch (Exception e) {
-				//System.out.println("");
 			}
 		}
 		for (int x = 1; x <= arrayListSize; x++) 
 		{
-			System.out.println(x+" ..."+getGenesList(x).toString());
 			if (getGenesList(x).size()>1)
 				AllMergedpaths.add((ArrayList<String>) getGenesList(x));
 		}
 
 		System.out.println("CLass-ExtensioMerging-writeInFIleMerging");
-		writeInFIleMerging();
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		//System.out.println(sdf.format(cal.getTime()));
-		System.out.println("Extension and Merging Done .....Finding sources and sinks");
-		System.out.println("arrayListSize"+arrayListSize);
-		for (List<String> string : AllMergedpaths) {
-			System.err.println(string.toString());
-			
-		}
+		writeInFIleMergedPaths();
+		System.out.println("Extension and Merging Done");
 	    FinalThreads.main(AllMergedpaths); 
 	}
 	
@@ -131,7 +110,7 @@ public class ExtensionMerging {
 				List<Double> pavlueListString = new ArrayList<>();
 				pavlueListString.clear();
 				for (String string : tempOrg) {
-					pavlueListString.add(psheetKeyValyePair.get(string));
+					pavlueListString.add(genesKeyPValuesPair.get(string));
 				}
 			Files.write(Paths.get(Step2Output), (tempOrg.toString()+ GenericFunctions.hartungFunction(pavlueListString) +"\n").getBytes(charset),
 					StandardOpenOption.CREATE, StandardOpenOption.APPEND);
@@ -141,7 +120,7 @@ public class ExtensionMerging {
 		}
 	}
 
-	private static void extendPathAllPaths() {
+	private static void extendingPaths() {
 		Set<Integer> pathSet = new HashSet<Integer>();
 		for (int pathNumber = 1; pathNumber <= arrayListSize; pathNumber++) {
 			List<String> tempList = getGenesList(pathNumber);
@@ -149,7 +128,7 @@ public class ExtensionMerging {
 				List<String> threeLengthPath = genesPathSize3(string);
 				Boolean found = false;
 				for (String stringX : threeLengthPath) {
-					Double dp = psheetKeyValyePair.get(stringX);
+					Double dp = genesKeyPValuesPair.get(stringX);
 					if (dp < .05) {
 						found = true;
 					}
@@ -159,28 +138,21 @@ public class ExtensionMerging {
 				List<Double> extendedPathCP = new ArrayList<>();
 				List<Double> originalPathCP = new ArrayList<>();
 				List<String> newExtendedPath = new ArrayList<>();
-				// if (threeLengthPath.size() > 2) {
 				List<String> tempOrg = getGenesList(pathNumber);
 				for (String gene : tempOrg) {
 					newExtendedPath.add(gene);
-					originalPathCP.add(psheetKeyValyePair.get(gene));
-					extendedPathCP.add(psheetKeyValyePair.get(gene));
+					originalPathCP.add(genesKeyPValuesPair.get(gene));
+					extendedPathCP.add(genesKeyPValuesPair.get(gene));
 				}
 				for (String string1 : threeLengthPath) {
 					newExtendedPath.add(string1);
-					extendedPathCP.add(psheetKeyValyePair.get(string1));
+					extendedPathCP.add(genesKeyPValuesPair.get(string1));
 				}
 				Double originalPathHartung = GenericFunctions.hartungFunction(originalPathCP);
 				if (originalPathHartung==0.0)
 					originalPathHartung = 2E-16;
 				Double extendedPathHartung = GenericFunctions.hartungFunction(extendedPathCP);
 				if (originalPathHartung > extendedPathHartung) { 
-					/*System.out.println("Genes " + string);
-					System.err.println("3 Length Path" + threeLengthPath);
-					System.out.println("Extented" + pathNumber);
-					System.err.println(originalPathHartung + " > " + extendedPathHartung);
-					System.out.println("Old Path" + tempOrg);
-					System.err.println("Extended Path" + newExtendedPath);*/
 					for (String as : threeLengthPath) {
 						step2GnesDone.add(as);
 					}
@@ -191,8 +163,6 @@ public class ExtensionMerging {
 			}
 			
 		}
-		for (Integer x : pathSet)
-			System.err.println(x + " ");
 		writeInFIleExtension();
 	}
 	private static void checkPathwithSig(List<String> ext, int pathNumber) {
@@ -208,23 +178,18 @@ public class ExtensionMerging {
 			List<String> tempOrg = getGenesList(pathNumber);
 			for (String gene : tempOrg) {
 				newExtendedPath.add(gene);
-				originalPathCP.add(psheetKeyValyePair.get(gene));
-				extendedPathCP.add(psheetKeyValyePair.get(gene));
+				originalPathCP.add(genesKeyPValuesPair.get(gene));
+				extendedPathCP.add(genesKeyPValuesPair.get(gene));
 			}
 			for (String string1 : temp) {
 				newExtendedPath.add(string1);
-				extendedPathCP.add(psheetKeyValyePair.get(string1));
+				extendedPathCP.add(genesKeyPValuesPair.get(string1));
 			}
 			Double originalPathHartung = GenericFunctions.hartungFunction(originalPathCP);
 			if (originalPathHartung==0.0)
 				originalPathHartung = 2E-16;
 			Double extendedPathHartung = GenericFunctions.hartungFunction(extendedPathCP);
 			if (originalPathHartung > extendedPathHartung) {
-				/*System.err.println("3 Length Path----" + temp);
-				System.out.println("Extented" + pathNumber);
-				System.err.println(originalPathHartung + " > " + extendedPathHartung);
-				System.out.println("Old Path" + tempOrg);
-				System.err.println("Extended Path" + newExtendedPath);*/
 				for (String as : ext) {
 					step2GnesDone.add(as);
 				}
@@ -251,7 +216,7 @@ public class ExtensionMerging {
 		}
 		Boolean sig = false;
 		for (String temp : returnString) {
-			Double tDouble = psheetKeyValyePair.get(temp);
+			Double tDouble = genesKeyPValuesPair.get(temp);
 			if (.05 > tDouble) {
 				sig = true;
 				break;
@@ -262,12 +227,12 @@ public class ExtensionMerging {
 	}
 
 	private static String smallestPvalueInteractingGene(String gene, List<String> temp) {
-		List<String> interction = edgeListHashMap.get(gene);
-		interction = sortpSheetList(interction);
+		List<String> interction = genesKeyInteractionPair.get(gene);
+		interction = sortGeneInfoList(interction);
 		for (String intr1 : interction) {
 			if ((!step2GnesDone.contains(intr1)) && (!temp.contains(intr1))) {
 				try {
-					Double pvalue = psheetKeyValyePair.get(intr1);
+					Double pvalue = genesKeyPValuesPair.get(intr1);
 					if (pvalue < 1)
 						return intr1;
 				} catch (Exception e) {
@@ -279,47 +244,47 @@ public class ExtensionMerging {
 	}
 
 	
-	private static void checkInteractionFunction(String gene, int listNumber) throws InterruptedException {
+	private static void mergingPaths (String gene, int listNumber) throws InterruptedException {
 		Set<String> iterationSet = new HashSet<String>();
 		iterationSet.add(gene);
-		double keyPValue1 = psheetKeyValyePair.get(gene);
-		List<String> interactingGenes1 = edgeListHashMap.get(gene);
-		interactingGenes1 = sortpSheetList(interactingGenes1);
+		double keyPValue1 = genesKeyPValuesPair.get(gene);
+		List<String> interactingGenes1 = genesKeyInteractionPair.get(gene);
+		interactingGenes1 = sortGeneInfoList(interactingGenes1);
 		List<String> parentGene = new ArrayList<>();
 		parentGene.add(gene);
-		checkIfIneract(gene, interactingGenes1, listNumber, 1, parentGene);
+		checkIfIneractionExist(gene, interactingGenes1, listNumber, 1, parentGene);
 		if (interactingGenes1 != null)
 			for (String item1 : interactingGenes1) {
 				if (!step2GnesDone.contains(item1))
 					if (!iterationSet.contains(item1)) {
 						iterationSet.add(item1);
 						parentGene = new ArrayList<>();
-						List<String> interactingGenes2 = edgeListHashMap.get(item1);
+						List<String> interactingGenes2 = genesKeyInteractionPair.get(item1);
 						parentGene.add(gene);
 						parentGene.add(item1);
-						checkIfIneract(item1, interactingGenes2, listNumber, 2, parentGene);
+						checkIfIneractionExist(item1, interactingGenes2, listNumber, 2, parentGene);
 						for (String item2 : interactingGenes2) {
 							if (!step2GnesDone.contains(item2))
 								if (!iterationSet.contains(item2)) {
 									iterationSet.add(item2);
 									parentGene = new ArrayList<>();
-									List<String> interactingGenes3 = edgeListHashMap.get(item2);
+									List<String> interactingGenes3 = genesKeyInteractionPair.get(item2);
 									parentGene.add(gene);
 									parentGene.add(item1);
 									parentGene.add(item2);
-									checkIfIneract(item1, interactingGenes3, listNumber, 3, parentGene);
+									checkIfIneractionExist(item1, interactingGenes3, listNumber, 3, parentGene);
 									for (String item3 : interactingGenes3) {
 										if (!step2GnesDone.contains(item3))
 											if (!iterationSet.contains(item3)) {
 												iterationSet.add(item3);
 												parentGene = new ArrayList<>();
-												List<String> interactingGenes4 = edgeListHashMap.get(item3);
-												interactingGenes4 = sortpSheetList(interactingGenes4);
+												List<String> interactingGenes4 = genesKeyInteractionPair.get(item3);
+												interactingGenes4 = sortGeneInfoList(interactingGenes4);
 												parentGene.add(gene);
 												parentGene.add(item1);
 												parentGene.add(item2);
 												parentGene.add(item3);
-												checkIfIneract(item1, interactingGenes4, listNumber, 4, parentGene);
+												checkIfIneractionExist(item1, interactingGenes4, listNumber, 4, parentGene);
 											}
 									}
 								}
@@ -328,7 +293,7 @@ public class ExtensionMerging {
 			}
 	}
 
-	private static void checkIfIneract(String genedd, List<String> interactingGenes1, int listNumber, int level,
+	private static void checkIfIneractionExist(String genedd, List<String> interactingGenes1, int listNumber, int level,
 			List<String> parentsGenes) throws InterruptedException {
 		if (parentsGenes.size() < 2)
 			return;
@@ -369,109 +334,46 @@ public class ExtensionMerging {
 							return;
 						List<Double> originalParentPValue = new ArrayList<>();
 						for (String pGene : originlParentList) {
-							originalParentPValue.add(psheetKeyValyePair.get(pGene));
+							originalParentPValue.add(genesKeyPValuesPair.get(pGene));
 						}
 						Double OriginlHartungResults = GenericFunctions.hartungFunction(originalParentPValue);
 						List<Double> originalInteractionPValue = new ArrayList<>();
 						for (String pGene : inerationWith) {
-							originalInteractionPValue.add(psheetKeyValyePair.get(pGene));
+							originalInteractionPValue.add(genesKeyPValuesPair.get(pGene));
 						}
 						Double interactionHartungResults = GenericFunctions.hartungFunction(originalInteractionPValue);
-						// added thse 4 lines
-						/*
-						if (Double.isNaN(interactionHartungResults))
-							continue;
-						if (interactionHartungResults==0d)
-							interactionHartungResults = 2E-16;
-							*/
-						//System.out.println("New Path");
 						List<String> newExtendedPath = new ArrayList<>();
 						List<Double> newExtendedPathPValue = new ArrayList<>();
 						Double hartungResultNew = 0.0;
 						for (String s : originlParentList) {
 							newExtendedPath.add(s);
-							newExtendedPathPValue.add(psheetKeyValyePair.get(s));
+							newExtendedPathPValue.add(genesKeyPValuesPair.get(s));
 						}
 						for (String s : checkList) {
 							newExtendedPath.add(s);
-							newExtendedPathPValue.add(psheetKeyValyePair.get(s));
+							newExtendedPathPValue.add(genesKeyPValuesPair.get(s));
 						}
 						for (String s : inerationWith) {
 							newExtendedPath.add(s);
-							newExtendedPathPValue.add(psheetKeyValyePair.get(s));
+							newExtendedPathPValue.add(genesKeyPValuesPair.get(s));
 						}
 						
 						hartungResultNew = GenericFunctions.hartungFunction(newExtendedPathPValue);
-						//System.out.println(newExtendedPath.toString() + hartungResultNew);
 						Boolean resultLessParent = (OriginlHartungResults > hartungResultNew);
 						Boolean resultLessExtended = (interactionHartungResults > hartungResultNew);
 						if (resultLessParent && resultLessExtended) {
 							for (String sqw : checkList) {
 								step2GnesDone.add(sqw);
 							}
-							System.out.println("/*********************************/");
-							
-							List<String> mostStupidRequest = new ArrayList<>();
-							System.out.println("Original List");
-							mostStupidRequest.add("Original List"+"\n");
-							for (String double1 : originlParentList) {
-								mostStupidRequest.add(double1);
-								System.out.print(double1 + " " );
-							}
-							mostStupidRequest.add("\n"+OriginlHartungResults+ "\n") ;
-							System.out.println(" "+ OriginlHartungResults);
-
-							mostStupidRequest.add("Center path List"+"\n");
-							System.out.println("Center path List");
-							for (String double1 : checkList) {
-								mostStupidRequest.add(double1);
-								System.out.print(double1 + " ");
-							}
-							System.out.println(" ");
-							mostStupidRequest.add("\n");
-							mostStupidRequest.add("inerationWith"+"\n");
-							System.out.println("inerationWith ");
-							for (String doubleX : inerationWith) {
-								mostStupidRequest.add(doubleX);
-								System.out.print(doubleX + " ");
-							} 
-							System.out.println("  "+interactionHartungResults);
-
-							mostStupidRequest.add("\n"+ interactionHartungResults + "\n");
-							mostStupidRequest.add("final merged "+"\n");
-							System.out.println("final merged ");
-							for (String doubleX : newExtendedPath) {
-								mostStupidRequest.add(doubleX);
-								System.out.print(doubleX + " ");
-							} 
-							mostStupidRequest.add("\n"+ hartungResultNew +"\n");
-							System.out.println("   "+hartungResultNew);
-						
-							Charset charset = StandardCharsets.UTF_8;
-							try {
-								
-								Files.write(Paths.get("/home/farman/ModulatesSubPaths/dafahojao.text"), (
-										mostStupidRequest.toString()+"\n").getBytes(charset),
-										StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-							
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-									
-					
-							System.out.println(" closing *****");
-							//System.err.println("Both less");
 							aaa.add(Integer.toString(listNumber));
 							aaa.add(Integer.toString(x));
 							MergingPojo merged = new MergingPojo();
 							merged.setMergedPath(newExtendedPath);
 							merged.setPathNumber_1(listNumber);
-							if (listNumber==2 || x==2 || listNumber==1 || x==1)
-								System.out.println("check executed");
 							setGenesList(newExtendedPath, listNumber);
 							setGenesList(new ArrayList<String>(), x);
-							inerLoogCouterStep3 = 0;
-							inerLoogSizeStep3 = newExtendedPath.size();
+							interactingListCounter = 0;
+							interactingListCounterCheck = newExtendedPath.size();
 							merged.setPathNumber_2(x);
 							merged.setCombineCP(hartungResultNew);
 							alreadyIteratedPath.add(listNumber);
@@ -505,7 +407,7 @@ public class ExtensionMerging {
 				}
 			}
 	}
-	private static synchronized void writeInFIleMerging() {
+	private static synchronized void writeInFIleMergedPaths() {
 		Charset charset = StandardCharsets.UTF_8;
 		try {
 			List<Double> pavlueListString = new ArrayList<>();
@@ -516,7 +418,7 @@ public class ExtensionMerging {
 				pavlueListString = new ArrayList<>();
 				pavlueListString.clear();
 				for (String string : genesList) {
-					pavlueListString.add(psheetKeyValyePair.get(string));
+					pavlueListString.add(genesKeyPValuesPair.get(string));
 				}
 				Double calculationResult = GenericFunctions.hartungFunction(pavlueListString);
 				Files.write(Paths.get(Step3Output), (genesList.toString() +" " +calculationResult+"\n").getBytes(charset),
@@ -543,18 +445,17 @@ public class ExtensionMerging {
 		hashTableList.put(index, list);
 			}
 
-	private static List<String> sortpSheetList(List<String> mainValueList) {
+	private static List<String> sortGeneInfoList(List<String> mainValueList) {
 		if (mainValueList == null)
 			return null;
-		List<PSheet> tempList = new ArrayList<PSheet>();
+		List<GenesInfo> tempList = new ArrayList<GenesInfo>();
 		List<String> returnList = new ArrayList<>();
 		for (String item : mainValueList) {
-			PSheet temp = new PSheet();
+			GenesInfo temp = new GenesInfo();
 			temp.setGeneName(item);
 			try {
-				temp.setpValue(psheetKeyValyePair.get(item));
+				temp.setpValue(genesKeyPValuesPair.get(item));
 			} catch (Exception e) {
-				//System.out.println("error" + item);
 				temp.setpValue(0.0);
 			}
 			if (temp.getpValue() > 0)
@@ -562,7 +463,7 @@ public class ExtensionMerging {
 		}
 
 		Collections.sort(tempList);
-		for (PSheet returnL : tempList) {
+		for (GenesInfo returnL : tempList) {
 			returnList.add(returnL.getGeneName());
 		}
 
