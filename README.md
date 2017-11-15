@@ -27,16 +27,18 @@ javac -cp ../lib/dom4j-1.6.1.jar:../lib/ooxml-schemas-1.0.jar:../lib/poi-3.9.jar
     echo Main-Class: InitialPaths  >manifest.txt
     jar cvfm ModulatedSubPathFinder.jar  manifest.txt *.class
 
-## Execute following commands from bin folder of ModulatedSubPathFinder Project
-java -jar ModulatedSubPathfinder.jar inputDEGFilePath inputInteractionFilePath OutputFolderPath
 
 
 ## Getting Started
 
-To find the Modulated sub-paths you need tab-seperated text files with no column names, Example files included in Docs folder
+To find the Modulated sub-paths you need 2 files. One file is tab-seperated text file containg the output of DESeq2 analysis (Column names should be removed). Second file is the intearction  file with 2 columns in it with interacting genes in it. Example files are included in Docs folder
 
 * Text file of DEG analysis TGFbp
 * Text file containing interactions TGFbI
+
+## Execute following commands from bin folder of ModulatedSubPathFinder Project
+
+java -jar ModulatedSubPathfinder.jar inputDEGFilePath inputInteractionFilePath OutputFolderPath
 
 ## Output Format
 
@@ -55,7 +57,7 @@ This is the text file showing if any or all the (extended/unextended) subpaths m
 
 ## Built With
 
-* Eclipse Neon
+Eclipse Neon
 
 ## Version
 
@@ -63,7 +65,7 @@ Version 1.0 of the tool.
 
 ## Authors
 
-* **Mariam Farman** 
+**Mariam Farman** 
 
 
 
