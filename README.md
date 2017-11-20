@@ -7,6 +7,7 @@ The tool is used to find the significantly dis-regulated sub-paths or cluster of
 ## Prerequisites
 
 * Java version 8
+* Jdk 1.8
 
 ## Execute following commands to compile and run ModulatedSubPathFinder Project.
 
@@ -31,14 +32,14 @@ javac -cp ../lib/dom4j-1.6.1.jar:../lib/ooxml-schemas-1.0.jar:../lib/poi-3.9.jar
 
 ## Getting Started
 
-To find the Modulated sub-paths you need 2 files. One file is tab-seperated text file containg the output of DESeq2 analysis (Column names should be removed). Second file is the intearction  file with 2 columns in it with interacting genes in it. Example files are included in Docs folder
+To find the Modulated sub-paths you need 2 files. One file is tab-seperated text file containg the output of DESeq2 analysis (Column names should be removed). Second file is the intearction file with 2 columns in it with interacting genes in it. The gene identifiers should be same in both the files. Example files are included in Docs folder
 
-* Text file of DEG analysis TGFbp
-* Text file containing interactions TGFbI
+* Text file of DEG analysis 
+* Text file containing interactions 
 
 ## Execute following commands from bin folder of ModulatedSubPathFinder Project
 
-java -jar ModulatedSubPathfinder.jar inputDEGFilePath inputInteractionFilePath OutputFolderPath
+java -jar ModulatedSubPathfinder.jar inputDEGFilePath inputInteractionFilePath OutputFolderPath/
 
 ## Output Format
 
