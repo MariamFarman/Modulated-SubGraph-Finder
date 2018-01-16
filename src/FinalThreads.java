@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -10,51 +11,52 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-
-
 public class FinalThreads {
 
-	
 	static Map<String, List<String>> genesKeyInteractionPair = new HashMap<String, List<String>>();
 	static Map<String, List<String>> interactingGeneFrom = new HashMap<String, List<String>>();
 	static Map<String, List<String>> interactingGeneTo = new HashMap<String, List<String>>();
 	static List<GenesInteractions> genesInteractionsListComplete = new ArrayList<GenesInteractions>();
 	static List<String> uniqueGenesInInteraction = new ArrayList<String>();
-	//static List<String> Genes = new ArrayList<>();
 	static List<GenesInfo> genesInfoList = new ArrayList<GenesInfo>();
 	static Map<String, Double> genesKeyPValuesPair = new HashMap<String, Double>();
 	static int rowCounter = 0;
-	static int sourceGreaterCOunter = 0;
-	static int originalSourceCOunter = 3;
 	static Hashtable<String, String> geneInfoHashTable = new Hashtable<>();
-	static List<String> genesList= new ArrayList<>();
+	static List<String> genesList = new ArrayList<>();
 	static String fileoutPathText;
-
-	public static void main (List<ArrayList<String>> AllMergedpaths) throws Exception {	
+	static int sourceCounter = 0 , sinkCounter = 0;
+	
+	public static void main(List<ArrayList<String>> AllMergedpaths) throws Exception {
+		fileoutPathText = DataStore.getOutputPath() + "FinalOutput.text";
 		System.out.println("Finding Sources and Sinks");
-		fileoutPathText = DataStore.getOutputPath()+ "FinalOutput.text";
 		genesInfoList = DataStore.getpSheetList();
-		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
+		genesInteractionsListComplete = DataStore.getedgeClassListComplete(); 
 		uniqueGenesInInteraction = DataStore.getedgeListSet();
 		genesKeyPValuesPair = DataStore.getpsheetKeyValyePair();
 		genesKeyInteractionPair = DataStore.getedgeListHashMap();
 		geneInfoHashTable = DataStore.getgeneInfoHashTable();
-		//EnsemblData = DataStore.getEnsemblData();
 		createHashListFromEdegeClassList(0);
-		int listNumer =1;
+		int listNumer = 1;
 		for (ArrayList<String> arrayList : AllMergedpaths) {
+			if (listNumer!=1)
+			{
+				List<String> prepareListTemp = new ArrayList<String>();
+			}
 			step4(arrayList, (listNumer));
 			listNumer++;
 		}
 		
+
+		List<String> prepareListTemp = new ArrayList<String>();
+		prepareListTemp.add("SOurce" + sourceCounter);
+		prepareListTemp.add("Sink" + sinkCounter);
 		System.out.println("Sources and Sinks found....Creating Final output file");
 	}
-	
-	
-	
-	private static synchronized void step4(List<String> genesList, int pathNumber)  {
+
+	private static synchronized void step4(List<String> genesList, int pathNumber) {
 
 		List<String> prepareList = new ArrayList<String>();
+		sourceCounter = 0; sinkCounter =0;
 		prepareList.add("Path " + pathNumber);
 		writeInFIle(prepareList);
 		prepareList = new ArrayList<String>();
@@ -63,9 +65,6 @@ public class FinalThreads {
 			prepareList.add(string);
 			pavlueListString.add(genesKeyPValuesPair.get(string));
 		}
-
-		double calculationResult = GenericFunctions.hartungFunction(pavlueListString);
-		prepareList.add(String.valueOf(calculationResult));
 		writeInFIle(prepareList);
 		for (String string : genesList) {
 			prepareList = new ArrayList<String>();
@@ -81,14 +80,12 @@ public class FinalThreads {
 			prepareList.add(geneInfoHashTable.get(string));
 			prepareList.add(String.valueOf(genesKeyPValuesPair.get(string)));
 			prepareList.add(checkGeneSourceSink(genesList, string));
-			/*prepareList.add(EnsemblData.get(string).get(0));
-		    prepareList.add(EnsemblData.get(string).get(1));*/
 			writeInFIle(prepareList);
 		}
 	}
 
 	private static synchronized void writeInFIle(List<String> output) {
-		
+
 		Charset charset = StandardCharsets.UTF_8;
 		try {
 			Files.write(Paths.get(fileoutPathText), (output.toString() + "\n").getBytes(charset),
@@ -127,25 +124,50 @@ public class FinalThreads {
 		}
 		if ((!(sink && source)) && (sinkGeneName != null || sourceGeneName != null)) {
 			if (sink) {
+				sinkCounter ++;
 				return "Sink";
+				
 			}
-			if (source) {
-				//System.out.println("sourceGeneName " + gene);
+			if (source) {		
+				 sourceCounter++; 
 				return "Source";
 			}
 		}
-		return "-";
+		return "Intermediate";
 
 	}
 
+	private static void refreshList() {
+		List<GenesInteractions> genesInteractionsList = new ArrayList<>();
+		for (GenesInteractions edgeClass : genesInteractionsListComplete) {
+			String symbol = edgeClass.getSymbol();
+			if (symbol.equalsIgnoreCase(CustomEnum.activation) || symbol.equalsIgnoreCase(CustomEnum.reverseActivation) 
+					|| symbol.equalsIgnoreCase(CustomEnum.Inhibition) ||symbol.equalsIgnoreCase(CustomEnum.reverseInhibitor))
+			{
+				
+				if (symbol.equalsIgnoreCase(CustomEnum.activation) || symbol.equalsIgnoreCase(CustomEnum.Inhibition))
+					genesInteractionsList.add(edgeClass);
+				else if (symbol.equalsIgnoreCase(CustomEnum.reverseActivation) || symbol.equalsIgnoreCase(CustomEnum.reverseInhibitor))
+				{
+					String firstColumn = edgeClass.getColumn1();
+					edgeClass.setColumn1(edgeClass.getColmn2());
+					edgeClass.setColmn2(firstColumn);
+					genesInteractionsList.add(edgeClass);
+				} 
+			} 
+			
+		}
+		genesInteractionsListComplete = new ArrayList<>();
+		genesInteractionsListComplete = genesInteractionsList;
+	}
+
 	private static void createHashListFromEdegeClassList(int column) {
+		refreshList();
 		genesKeyInteractionPair = new HashMap<String, List<String>>();
 		interactingGeneFrom = new HashMap<String, List<String>>();
 		interactingGeneTo = new HashMap<String, List<String>>();
-		genesKeyInteractionPair = new HashMap<String, List<String>>();
-		int column1 = 0;
+		int column1 = 0; 
 		int column2 = 0;
-
 		for (String uniqueKey : uniqueGenesInInteraction) {
 			List<String> valuesList = new ArrayList<String>();
 			List<String> valuesList1 = new ArrayList<String>();
@@ -165,7 +187,6 @@ public class FinalThreads {
 									valuesList1.add(column2Value);
 								}
 						} catch (Exception e) {
-							//System.out.println("");
 						}
 					}
 				}
@@ -186,7 +207,6 @@ public class FinalThreads {
 									valuesList2.add(column1Value);
 								}
 						} catch (Exception e) {
-							//System.out.println("");
 						}
 					}
 				}
