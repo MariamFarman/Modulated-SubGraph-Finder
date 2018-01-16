@@ -55,6 +55,10 @@ In this text file any initial subpath that could be further extended by incopora
 
 This is the text file showing if any or all the (extended/unextended) subpaths merge with each other or not.
 
+### Final Output
+
+This output file gives details about the genes found in the sub-modules. It shows all the possible sources and sinks for each sub-modules indentified and the interaction genes of each gene in the sub-module and its corresponding P-value.
+
 
 ## Built With
 
