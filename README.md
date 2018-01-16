@@ -1,6 +1,6 @@
 # SubPathFinder
 
-The tool is used to find the significantly dis-regulated sub-paths or cluster of genes from the host cell signaling network, giving these sub-paths an overall significance of modulation by combining the individual p-values of the genes derived from differential genes expression analysis. 
+The tool is used to find the significantly dis-regulated sub-modules or cluster of genes from the host cell signaling network, giving these sub-paths an overall significance of modulation by combining the individual p-values of the genes derived from differential genes expression analysis. 
 
 # Installation
 
@@ -32,7 +32,7 @@ javac -cp ../lib/dom4j-1.6.1.jar:../lib/ooxml-schemas-1.0.jar:../lib/poi-3.9.jar
 
 ## Getting Started
 
-To find the Modulated sub-paths you need 2 files. One file is tab-seperated text file containg the output of DESeq2 analysis (Column names should be removed). Second file is the intearction file with 2 columns in it with interacting genes in it. The gene identifiers should be same in both the files. Example files are included in Docs folder
+To find the Modulated sub-paths you need 2 files. One file is tab-seperated text file containg the output of DESeq2 analysis (Column names should be removed) and Pvalue of genes should be in column number 5. Second file is the intearction file with 3 columns, first two columns with interacting gene and the third column direction of the interaction. The gene identifiers should be same in both the files. Example files are included in Docs folder
 
 * Text file of DEG analysis 
 * Text file containing interactions 
