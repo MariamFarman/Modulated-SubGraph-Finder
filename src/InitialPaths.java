@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -12,33 +13,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 public class InitialPaths {
 	static List<GenesInfo> genesInfoList = new ArrayList<GenesInfo>();
 	static List<GenesInteractions> genesInteractionsListComplete = new ArrayList<GenesInteractions>();
 	public static List<ArrayList<String>> Allpaths = new ArrayList<ArrayList<String>>();
 	static List<String> uniqueGenesInInteraction = new ArrayList<String>();
 	static String Step1Output;
-	static Map<String, Double> genesKeyPValuesPair = new HashMap<String, Double>(); 
+	static Map<String, Double> genesKeyPValuesPair = new HashMap<String, Double>();
 	static Map<String, List<String>> genesKeyInteractionPair = new HashMap<String, List<String>>();
 	static GenesInfo geneInfo = new GenesInfo();
 	static long threshold = 2L;
 	static int rowCounter = 0;
 
 	public static void main(String[] args) throws Exception {
-		 
-		Step1Output = args[2]+"InitialPaths.text";
-		DataStore.DataStor(args[0],args[1],args[2]);
-		geneInfo = DataStore.getpSheet();
-		genesInfoList = DataStore.getpSheetList();
-		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
-		uniqueGenesInInteraction = DataStore.getedgeListSet();
-		genesKeyPValuesPair = DataStore.getpsheetKeyValyePair();
-		genesKeyInteractionPair = DataStore.getedgeListHashMap();
-		identifyingInitialPaths();
-		System.out.println("Found Initial Paths");
-		ExtensionMerging.main(Allpaths);
-	}
+		System.out.println("Looking for Initial Paths");
+		Step1Output = args[2] + "InitialPaths.text";
+			DataStore.DataStor(args[0], args[1], args[2]);
+			geneInfo = DataStore.getpSheet();
+			genesInfoList = DataStore.getpSheetList();
+			genesInteractionsListComplete = DataStore.getedgeClassListComplete();
+			uniqueGenesInInteraction = DataStore.getedgeListSet();
+			genesKeyPValuesPair = DataStore.getpsheetKeyValyePair();
+			genesKeyInteractionPair = DataStore.getedgeListHashMap();
+			identifyingInitialPaths();
+			System.out.println("Found Initial Paths");
+			ExtensionMerging.main(Allpaths);
+		}
+	
 
 	private static List<String> sortpSheetList(List<String> mainValueList) {
 		if (mainValueList == null)
@@ -61,7 +62,7 @@ public class InitialPaths {
 		}
 		return returnList;
 	}
-	
+
 	static int returnCounter(int counter, int newCounter) {
 		if (newCounter <= 0) {
 			return 0;
@@ -71,11 +72,11 @@ public class InitialPaths {
 
 	private static void identifyingInitialPaths() {
 		Collections.sort(genesInfoList);
-		Set<String> iterationSet = new HashSet<String>(); // all checked genes
+		Set<String> iterationSet = new HashSet<String>(); 
 		for (GenesInfo psheet : genesInfoList) {
 			String rootGeneName = "";
 			double combinePValue = 0.0;
-			ArrayList<String> selectedGenes = new ArrayList<String>(); // parents genes
+			ArrayList<String> selectedGenes = new ArrayList<String>(); 
 			rootGeneName = psheet.getGeneName();
 			if (iterationSet.contains(rootGeneName))
 				continue;
@@ -84,7 +85,7 @@ public class InitialPaths {
 			if (combinePValue >= 0.99)
 				continue;
 			List<String> interactingGenes = genesKeyInteractionPair.get(rootGeneName);
-			interactingGenes = sortpSheetList(interactingGenes); // sorting Interactions on Pvalues
+			interactingGenes = sortpSheetList(interactingGenes); 
 			selectedGenes.add(rootGeneName);
 			int counterCheck = 0;
 			for (int counter = counterCheck; interactingGenes != null
@@ -124,17 +125,17 @@ public class InitialPaths {
 				interactingGenes = sortpSheetList(newStringList);
 				counterCheck = 0;
 			}
-			if (selectedGenes.size() > 2){
+			if (selectedGenes.size() > 2) {
 				Allpaths.add(selectedGenes);
 				writeInFIle(selectedGenes, combinePValue);
-			}			
+			}
 		}
 	}
 
-	private static synchronized void writeInFIle(ArrayList<String> output,double combineValue) {
+	private static synchronized void writeInFIle(ArrayList<String> output, double combineValue) {
 		Charset charset = StandardCharsets.UTF_8;
 		try {
-			Files.write(Paths.get(Step1Output), (output.toString() + " "+ combineValue +"\n").getBytes(charset),
+			Files.write(Paths.get(Step1Output), (output.toString() + " " + combineValue + "\n").getBytes(charset),
 					StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 		} catch (IOException e) {
 			e.printStackTrace();
