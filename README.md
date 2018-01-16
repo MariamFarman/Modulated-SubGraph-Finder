@@ -57,7 +57,7 @@ This is the text file showing if any or all the (extended/unextended) subpaths m
 
 ### Final Output
 
-This output file gives details about the genes found in the sub-modules. It shows all the possible sources and sinks for each sub-modules indentified and the interaction genes of each gene in the sub-module and its corresponding P-value.
+This output file gives details about the genes found in the sub-modules. It shows all the possible sources and sinks for each sub-module indentified and the interacting genes of each gene in the sub-module and its corresponding P-value.
 
 
 ## Built With
