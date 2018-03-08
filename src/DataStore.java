@@ -94,7 +94,7 @@ public class DataStore {
 			geneInfo = new GenesInfo();
 			String[] splitArray = string.split("\\s+");
 			String geneName = splitArray[0].replace("\"", "");
-			String pvalue = splitArray[5];
+			String pvalue = splitArray[4];
 			geneInfo.setGeneName(geneName.toLowerCase());
 			if (pvalue.equalsIgnoreCase("NA"))
 				continue;
