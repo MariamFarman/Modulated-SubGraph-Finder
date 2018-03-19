@@ -1,4 +1,4 @@
-# SubPathFinder
+# Modulated Sub-graph Finder
 
 The tool is used to find the significantly dis-regulated sub-modules or cluster of genes from the host cell signaling network, giving these sub-paths an overall significance of modulation by combining the individual p-values of the genes derived from differential genes expression analysis. 
 
