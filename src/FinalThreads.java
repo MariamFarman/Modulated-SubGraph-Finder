@@ -23,14 +23,15 @@ public class FinalThreads {
 	static int rowCounter = 0;
 	static Hashtable<String, String> geneInfoHashTable = new Hashtable<>();
 	static List<String> genesList = new ArrayList<>();
+	static List<String> ReactomeList = new ArrayList<>();
 	static String fileoutPathText;
-	static int sourceCounter = 0 , sinkCounter = 0;
-	
+	static int sourceCounter = 0, sinkCounter = 0;
+
 	public static void main(List<ArrayList<String>> AllMergedpaths) throws Exception {
 		fileoutPathText = DataStore.getOutputPath() + "FinalOutput.text";
 		System.out.println("Finding Sources and Sinks");
 		genesInfoList = DataStore.getpSheetList();
-		genesInteractionsListComplete = DataStore.getedgeClassListComplete(); 
+		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
 		uniqueGenesInInteraction = DataStore.getedgeListSet();
 		genesKeyPValuesPair = DataStore.getpsheetKeyValyePair();
 		genesKeyInteractionPair = DataStore.getedgeListHashMap();
@@ -38,30 +39,31 @@ public class FinalThreads {
 		createHashListFromEdegeClassList(0);
 		int listNumer = 1;
 		for (ArrayList<String> arrayList : AllMergedpaths) {
-			if (listNumer!=1)
-			{
+			if (listNumer != 1) {
 				List<String> prepareListTemp = new ArrayList<String>();
 			}
 			step4(arrayList, (listNumer));
 			listNumer++;
 		}
-		
 
 		List<String> prepareListTemp = new ArrayList<String>();
 		prepareListTemp.add("SOurce" + sourceCounter);
 		prepareListTemp.add("Sink" + sinkCounter);
 		System.out.println("Sources and Sinks found....Creating Final output file");
+
 	}
 
 	private static synchronized void step4(List<String> genesList, int pathNumber) {
 
 		List<String> prepareList = new ArrayList<String>();
-		sourceCounter = 0; sinkCounter =0;
+		sourceCounter = 0;
+		sinkCounter = 0;
 		prepareList.add("Path " + pathNumber);
 		writeInFIle(prepareList);
 		prepareList = new ArrayList<String>();
 		List<Double> pavlueListString = new ArrayList<>();
 		for (String string : genesList) {
+			ReactomeList.add(string);
 			prepareList.add(string);
 			pavlueListString.add(genesKeyPValuesPair.get(string));
 		}
@@ -124,12 +126,12 @@ public class FinalThreads {
 		}
 		if ((!(sink && source)) && (sinkGeneName != null || sourceGeneName != null)) {
 			if (sink) {
-				sinkCounter ++;
+				sinkCounter++;
 				return "Sink";
-				
+
 			}
-			if (source) {		
-				 sourceCounter++; 
+			if (source) {
+				sourceCounter++;
 				return "Source";
 			}
 		}
@@ -141,21 +143,21 @@ public class FinalThreads {
 		List<GenesInteractions> genesInteractionsList = new ArrayList<>();
 		for (GenesInteractions edgeClass : genesInteractionsListComplete) {
 			String symbol = edgeClass.getSymbol();
-			if (symbol.equalsIgnoreCase(CustomEnum.activation) || symbol.equalsIgnoreCase(CustomEnum.reverseActivation) 
-					|| symbol.equalsIgnoreCase(CustomEnum.Inhibition) ||symbol.equalsIgnoreCase(CustomEnum.reverseInhibitor))
-			{
-				
+			if (symbol.equalsIgnoreCase(CustomEnum.activation) || symbol.equalsIgnoreCase(CustomEnum.reverseActivation)
+					|| symbol.equalsIgnoreCase(CustomEnum.Inhibition)
+					|| symbol.equalsIgnoreCase(CustomEnum.reverseInhibitor)) {
+
 				if (symbol.equalsIgnoreCase(CustomEnum.activation) || symbol.equalsIgnoreCase(CustomEnum.Inhibition))
 					genesInteractionsList.add(edgeClass);
-				else if (symbol.equalsIgnoreCase(CustomEnum.reverseActivation) || symbol.equalsIgnoreCase(CustomEnum.reverseInhibitor))
-				{
+				else if (symbol.equalsIgnoreCase(CustomEnum.reverseActivation)
+						|| symbol.equalsIgnoreCase(CustomEnum.reverseInhibitor)) {
 					String firstColumn = edgeClass.getColumn1();
 					edgeClass.setColumn1(edgeClass.getColmn2());
 					edgeClass.setColmn2(firstColumn);
 					genesInteractionsList.add(edgeClass);
-				} 
-			} 
-			
+				}
+			}
+
 		}
 		genesInteractionsListComplete = new ArrayList<>();
 		genesInteractionsListComplete = genesInteractionsList;
@@ -166,7 +168,7 @@ public class FinalThreads {
 		genesKeyInteractionPair = new HashMap<String, List<String>>();
 		interactingGeneFrom = new HashMap<String, List<String>>();
 		interactingGeneTo = new HashMap<String, List<String>>();
-		int column1 = 0; 
+		int column1 = 0;
 		int column2 = 0;
 		for (String uniqueKey : uniqueGenesInInteraction) {
 			List<String> valuesList = new ArrayList<String>();

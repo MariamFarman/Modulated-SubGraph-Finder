@@ -9,18 +9,27 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.print.attribute.standard.MediaSize.Other;
+
 public class DataStore {
-	
+
 	public static GenesInfo geneInfo = new GenesInfo();
 	public static List<GenesInfo> geneInfoList = new ArrayList<GenesInfo>();
 	public static Map<String, Double> genesKeyPValuesPair = new HashMap<String, Double>();
 	public static List<String> uniqueGenesInInteraction = new ArrayList<String>();
 	public static List<GenesInteractions> genesInteractionsListComplete = new ArrayList<GenesInteractions>();
+	public static List<GenesInteractions> genesInteractionsListCompleteTemp = new ArrayList<GenesInteractions>();
+	static Map<String, List<TempModel>> interactingGeneFrom = new HashMap<String, List<TempModel>>();
+	static Map<String, List<TempModel>> interactingGeneTo = new HashMap<String, List<TempModel>>();
 	static Map<String, List<String>> genesKeyInteractionPair = new HashMap<String, List<String>>();
+
+	static Map<String, List<TempModel>> genesKeyInteractionPairTemp = new HashMap<String, List<TempModel>>();
+
 	static Hashtable<String, String> geneInfoHashTable = new Hashtable<>();
-	
+
 	static String outputPath;
 	private static DataStore instance = null;
+
 	public static String getOutputPath() {
 		return outputPath;
 	}
@@ -78,8 +87,7 @@ public class DataStore {
 		return geneInfoHashTable;
 	}
 
-	public static void readPValuesFromTextFile(
-			String fileName) {
+	public static void readPValuesFromTextFile(String fileName) {
 
 		List<String> list = new ArrayList<>();
 		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
@@ -89,6 +97,7 @@ public class DataStore {
 			e.printStackTrace();
 		}
 		int count = 0;
+		list.remove(0);
 		for (String string : list) {
 			count = count + 1;
 			geneInfo = new GenesInfo();
@@ -106,11 +115,10 @@ public class DataStore {
 				geneInfoList.add(geneInfo);
 			genesKeyPValuesPair.put(geneInfo.getGeneName().toLowerCase(), geneInfo.getpValue());
 			geneInfoHashTable.put(geneName.toLowerCase(), String.valueOf(splitArray[2]));
-        }
+		}
 	}
 
 	public static void readInteractionsFromTextFile(String fileName) {
-
 		List<String> list = new ArrayList<>();
 		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 			list = stream.map(String::toUpperCase).collect(Collectors.toList());
@@ -124,10 +132,14 @@ public class DataStore {
 			String[] splitArray = string.split("\\s+");
 			String from = splitArray[0].toLowerCase();
 			String to = splitArray[1].toLowerCase();
+			String symbol = splitArray[2];
 			Boolean pvalueFound = true;
 			try {
 				Double pvalue = genesKeyPValuesPair.get(from);
 				Double pvalue2 = genesKeyPValuesPair.get(to);
+				if (pvalue == null || pvalue == Double.NaN || pvalue2 == null || pvalue2 == Double.NaN) // temperory
+																										// condition
+					continue;
 			} catch (Exception e) {
 				pvalueFound = false;
 			}
@@ -139,11 +151,12 @@ public class DataStore {
 				uniqueGenesInInteraction.add(to);
 			edgeClass.setColumn1(from);
 			edgeClass.setColmn2(to);
+			edgeClass.setSymbol(symbol);
 			genesInteractionsListComplete.add(edgeClass);
 		}
 	}
-	
-	private static void createHashListFromEdegeClassList() {
+
+	static void createHashListFromEdegeClassList() {
 		for (String uniqueKey : uniqueGenesInInteraction) {
 			List<String> valuesList = new ArrayList<String>();
 			for (GenesInteractions edgeClass : genesInteractionsListComplete) {
@@ -159,4 +172,103 @@ public class DataStore {
 			genesKeyInteractionPair.put(uniqueKey, valuesList);
 		}
 	}
+
+	// TEMPERORY CODE
+	
+
+	private static void refreshList() {
+		System.out.println("before = " + genesInteractionsListComplete.size());
+		List<GenesInteractions> genesInteractionsList = new ArrayList<>();
+		for (GenesInteractions edgeClass : genesInteractionsListComplete) {
+			String symbol = edgeClass.getSymbol();
+			if (symbol.equalsIgnoreCase(CustomEnum.reverseActivation)
+					|| symbol.equalsIgnoreCase(CustomEnum.reverseInhibitor)) {
+				String firstColumn = edgeClass.getColumn1();
+				edgeClass.setColumn1(edgeClass.getColmn2());
+				edgeClass.setColmn2(firstColumn);
+				genesInteractionsList.add(edgeClass);
+			} else
+				genesInteractionsList.add(edgeClass);
+
+		}
+		genesInteractionsListCompleteTemp = new ArrayList<>();
+		genesInteractionsListCompleteTemp = genesInteractionsList;
+	}
+
+	public static Map<String, List<TempModel>> getInteractingGeneFrom() {
+		return interactingGeneFrom;
+	}
+
+	public static void setInteractingGeneFrom(Map<String, List<TempModel>> interactingGeneFrom) {
+		DataStore.interactingGeneFrom = interactingGeneFrom;
+	}
+
+	public static Map<String, List<TempModel>> getInteractingGeneTo() {
+		return interactingGeneTo;
+	}
+
+	public static void setInteractingGeneTo(Map<String, List<TempModel>> interactingGeneTo) {
+		DataStore.interactingGeneTo = interactingGeneTo;
+	}
+
+	static void createHashListFromEdegeClassListTemp(int column) {
+		refreshList();
+		interactingGeneFrom = new HashMap<String, List<TempModel>>();
+		interactingGeneTo = new HashMap<String, List<TempModel>>();
+		int column1 = 0;
+		int column2 = 0;
+		for (String uniqueKey : uniqueGenesInInteraction) {
+			List<TempModel> valuesList = new ArrayList<TempModel>();
+			List<TempModel> valuesList1 = new ArrayList<TempModel>();
+			List<TempModel> valuesList2 = new ArrayList<TempModel>();
+			if (column == 0 || column == 2) {
+				column1++;
+				for (GenesInteractions edgeClass : genesInteractionsListCompleteTemp) {
+					if (valuesList.size() > 1000)
+						break;
+					if (edgeClass.getColumn1().equalsIgnoreCase(uniqueKey)) {
+						try {
+							String column2Value = edgeClass.getColmn2().toLowerCase();
+							Double pvalueTemp = genesKeyPValuesPair.get(column2Value);
+							if (!pvalueTemp.isNaN())
+								if (pvalueTemp > 0 && pvalueTemp < 1) {
+									TempModel tempModel = new TempModel();
+									tempModel.setInteractingGene(column2Value.trim());
+									tempModel.setSymbol(edgeClass.getSymbol());
+									valuesList.add(tempModel);
+									valuesList1.add(tempModel);
+								}
+						} catch (Exception e) {
+						}
+					}
+				}
+				interactingGeneTo.put(uniqueKey.toLowerCase().trim(), valuesList1);
+			} 
+			if (column == 0 || column == 1) {
+				column2++;
+				for (GenesInteractions edgeClass : genesInteractionsListCompleteTemp) {
+					if (valuesList.size() > 1000)
+						break;
+					if (edgeClass.getColmn2().equalsIgnoreCase(uniqueKey)) {
+						try {
+							String column1Value = edgeClass.getColumn1().toLowerCase();
+							Double pvalueTemp = genesKeyPValuesPair.get(column1Value);
+							if (!pvalueTemp.isNaN())
+								if (pvalueTemp > 0 && pvalueTemp < 1) {
+									TempModel tempModel = new TempModel();
+									tempModel.setInteractingGene(column1Value.trim());
+									tempModel.setSymbol(edgeClass.getSymbol());
+									valuesList.add(tempModel);
+									valuesList2.add(tempModel);
+								}
+						} catch (Exception e) {
+						}
+					}
+				}
+				interactingGeneFrom.put(uniqueKey.toLowerCase().trim(), valuesList2);
+			}
+			genesKeyInteractionPairTemp.put(uniqueKey.toLowerCase().trim(), valuesList);
+		}
+	}
+	
 }
