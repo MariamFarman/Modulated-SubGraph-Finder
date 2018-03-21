@@ -39,7 +39,9 @@ To find the Modulated sub-paths you need 2 files. One file is tab-seperated text
 
 ## Execute following commands from bin folder of ModulatedSubPathFinder Project
 
-java -jar ModulatedSubPathfinder.jar inputDEGFilePath inputInteractionFilePath OutputFolderPath/
+java -jar ModulatedSubPathfinder.jar inputDEGFilePath inputInteractionFilePath extensionLimit mergingLimit OutputFolderPath/
+
+The default extension for the sub-graphs is 2 and merging is done by 1 gene by default. Either give no limits for extension or merging (default would be used) or give both limits.
 
 ## Output Format
 
@@ -58,6 +60,9 @@ This is the text file showing if any or all the (extended/unextended) subpaths m
 ### Final Output
 
 This output file gives details about the genes found in the sub-modules. It shows all the possible sources and sinks for each sub-module indentified and the interacting genes of each gene in the sub-module and its corresponding P-value.
+
+### Network File
+A text file with adjacency list for MSF identified modulated sub-graphs. This file could further be used to visulaize the sub-graphs in other tools for example in Cytoscape.
 
 
 ## Built With
