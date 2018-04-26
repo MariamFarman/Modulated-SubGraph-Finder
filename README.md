@@ -13,7 +13,7 @@ The tool is used to find the significantly dis-regulated sub-graphs or cluster o
 
 ### Copy the whole project of ModulatedSubpathFiner from github into a new directory
 
-git clone https://github.com/MariamFarman/Modulated-SubPath-Finder.git
+git clone https://github.com/MariamFarman/Modulated-SubGraph-Finder
 
 ### Naviagate to src folder of project
 ### Execute following command to compile ModulatedSubPathFinder Project
