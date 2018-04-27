@@ -2,8 +2,6 @@
 
 The tool is used to find the significantly dis-regulated sub-graphs or cluster of genes from the host cell signaling network, giving these sub-graphs an overall significance of modulation by combining the individual p-values of the genes derived from differential genes expression analysis. 
 
-# Installation
-
 ## Prerequisites
 
 * Java version 8
