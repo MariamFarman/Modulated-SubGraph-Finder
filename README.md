@@ -27,7 +27,7 @@ Navigate to src folder of project and run command
 
 To find the Modulated sub-graphs you need two files. One file is tab-seperated text file containg the output of DESeq2/EdgeR analysis. Second file is a directed adjacency list with 3 columns, first two columns with interacting genes and the third column direction of the interaction. The gene identifiers should be same in both the input files. Example files included in Docs folder.
 
-## Runnig MSF
+## Running MSF
 Navigate  to src folder of project and run command
 
 java -jar ModulatedSubgraphfinder.jar inputDEGFilePath inputInteractionFilePath extensionLimit mergingLimit OutputFolderPath/
