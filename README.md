@@ -9,25 +9,25 @@ The tool is used to find the significantly dis-regulated sub-graphs or cluster o
 * Java version 8
 * Jdk 1.8
 
-## Execute following commands to compile and run ModulatedSubPathFinder Project.
+## Download
+
+### Linux
+
+Copy the whole project of ModulatedSubpathFiner from github into a new directory
+git clone https://github.com/MariamFarman/Modulated-SubGraph-Finder
+
+### Windows
+
+
 
 ### Copy the whole project of ModulatedSubpathFiner from github into a new directory
 
-git clone https://github.com/MariamFarman/Modulated-SubGraph-Finder
+    git clone https://github.com/MariamFarman/Modulated-SubGraph-Finder`
 
-### Naviagate to src folder of project
-### Execute following command to compile ModulatedSubPathFinder Project
+## Installation
+Naviagate to src folder of project and run
 
-javac -cp ../lib/dom4j-1.6.1.jar:../lib/ooxml-schemas-1.0.jar:../lib/poi-3.9.jar:../lib/poi-ooxml-3.7-20101029.jar:../lib/xmlbeans-2.5.0.jar -d ../bin/ Bernoulli.java BigIntegerMath.java BigSurdVec.java Euler.java BigComplex.java BigIntegerPoly.java EulerPhi.java Harmonic.java PartitionsP.java Rational.java Wigner3jGUI.java BigDecimalMath.java BigSurd.java Factorial.java Ifactor.java Prime.java RatPoly.java Wigner3j.java GenesInfo.java GenesInteractions.java GenericFunctions.java DataStore.java InitialPaths.java ExtensionMerging.java FinalThreads.java StringListSorting.java MergingPojo.java
-
-## Package ModulatedSubPathFinder Project as a jar file
-
-### Navigate to bin folder of ModulatedSubPathFinder
-### Run following command
-
-    echo Main-Class: InitialPaths  >manifest.txt
-    jar cvfm ModulatedSubPathFinder.jar  manifest.txt *.class
-
+    `make`
 
 
 ## Getting Started
