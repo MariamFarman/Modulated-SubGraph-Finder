@@ -11,7 +11,7 @@ The tool is used to find the significantly dis-regulated sub-graphs or cluster o
 
 ### Linux
 
-Copy the whole project of ModulatedSubpathFiner from github into a new directory
+Copy the whole project of Modulated Sub-graph Finder from github into a new directory
 
 `git clone https://github.com/MariamFarman/Modulated-SubGraph-Finder`
 
@@ -30,7 +30,7 @@ To find the Modulated sub-graphs you need two files. One file is tab-seperated t
 ## Runnig MSF
 Navigate  to src folder of project and run command
 
-java -jar ModulatedSubPathfinder.jar inputDEGFilePath inputInteractionFilePath extensionLimit mergingLimit OutputFolderPath/
+java -jar ModulatedSubgraphfinder.jar inputDEGFilePath inputInteractionFilePath extensionLimit mergingLimit OutputFolderPath/
 
 The default extension for the sub-graphs is 2 and merging is done by 1 gene by default. 
 
