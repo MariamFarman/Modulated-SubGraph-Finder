@@ -23,20 +23,43 @@ Navigate to src folder of project and run command
     `make`
 
 
-## Input Data
+## Input Data Preparation
 
 To find the Modulated sub-graphs you need two files. One file is tab-seperated text file containg the output of DESeq2/EdgeR analysis. Second file is a directed adjacency list with 3 columns, first two columns with interacting genes and the third column direction of the interaction. The gene identifiers should be same in both the input files. Example files included in Docs folder.
 
-## Running MSF
+## Tutorial
+
+MSF has 7 argument parameters 
+
+* -p	The path to differential gene expression analysis file 
+* -i	The path to network file (Interaction file)
+* -t	Software used for differntial gene expression analysis (DEaeq2 or EdgeR)
+* -e	The extension limit (1 to 3 genes extension)
+* -m	The merging limit (1 to 3 genes merging)
+* -k	Output extra files (InitialPaths, ExtendedPaths and MergedPaths)
+* -o	The path to output folder
+
 Navigate  to src folder of project and run command
 
-java -jar ModulatedSubgraphfinder.jar inputDEGFilePath inputInteractionFilePath extensionLimit mergingLimit OutputFolderPath/
+java -jar ModulatedSubgraphfinder.jar -p ../Docs/
 
-The default extension for the sub-graphs is 2 and merging is done by 1 gene by default. 
+The default extension and merging limit is 2.
 
 ## Output Files
 
-### SourcesSinks
+### InitialGraphs
+
+This is a text file that contains the initial sub-graphs that are found by combining the individual P-values of the gene.
+
+### ExtendedGraphs
+
+In this text file any initial sub-graph that could be further extended beyond its immediate neighbourhood.
+
+### MergedGraphs
+
+This is the text file showing if any or all the (extended/unextended) sub-graphs merge with each other or not.
+
+### SourcesAndSinks
 
 This output file gives details about the genes found in the sub-graphs. It shows all the possible sources and sinks for each sub-module identified  and the interacting genes of each gene in the sub-graph and its corresponding P-value.
 
