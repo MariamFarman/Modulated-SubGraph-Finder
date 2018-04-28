@@ -29,15 +29,15 @@ To find the Modulated sub-graphs you need two files. One file is tab-seperated t
 
 ## Tutorial
 
-MSF has 7 argument parameters 
+MSF has seven argument parameters 
 
-* -p	The path to differential gene expression analysis file 
-* -i	The path to network file (Interaction file)
-* -t	Software used for differntial gene expression analysis (DEaeq2 or EdgeR)
-* -e	The extension limit (1 to 3 genes extension)
-* -m	The merging limit (1 to 3 genes merging)
-* -k	Output extra files (InitialPaths, ExtendedPaths and MergedPaths)
-* -o	The path to output folder
+* `-p`	The path to differential gene expression analysis file 
+* `-i`	The path to network file (Interaction file)
+* `-t`	Software used for differntial gene expression analysis (DEseq2 or EdgeR)
+* `-e`	The extension limit (1 to 3 genes extension)
+* `-m`	The merging limit (1 to 3 genes merging)
+* `-k`	Output extra files (InitialGraphs, ExtendedGraphs and MergedGraphs)
+* `-o`	The path to output folder
 
 Navigate  to src folder of project and run command
 
@@ -45,28 +45,28 @@ java -jar ModulatedSubgraphfinder.jar -p ../Docs/
 
 The default extension and merging limit is 2.
 
-## Output Files
+### Output Files
 
-### InitialGraphs
+#### InitialGraphs
 
 This is a text file that contains the initial sub-graphs that are found by combining the individual P-values of the gene.
 
-### ExtendedGraphs
+#### ExtendedGraphs
 
 In this text file any initial sub-graph that could be further extended beyond its immediate neighbourhood.
 
-### MergedGraphs
+#### MergedGraphs
 
 This is the text file showing if any or all the (extended/unextended) sub-graphs merge with each other or not.
 
-### SourcesAndSinks
+#### SourcesAndSinks
 
 This output file gives details about the genes found in the sub-graphs. It shows all the possible sources and sinks for each sub-module identified  and the interacting genes of each gene in the sub-graph and its corresponding P-value.
 
 ### NetworkFile
 A text file with directed adjacency list for MSF identified modulated sub-graphs. This file could further be used to visualize the sub-graphs in other tools for example in Cytoscape.
 
-# Tutorial
+### Tutorial MSF to StringApp
 
 
 ## Built With
@@ -80,6 +80,10 @@ Version 1.0 of the tool.
 ## Authors
 
 **Mariam Farman** 
+
+## License
+
+This project is licensed under the Creative Commons Attribution 4.0 International License.
 
 
 
