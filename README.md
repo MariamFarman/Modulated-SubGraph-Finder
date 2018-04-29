@@ -41,7 +41,8 @@ MSF has seven argument parameters
 
 Navigate  to src folder of project and run command
 
-java -jar ModulatedSubgraphfinder.jar -p ../Docs/
+`java -jar ModulatedSubPathFinder.jar -p ../Docs/ExampleDEAnalysis.txt -i ../Docs/ExampleInteractions.txt -t DEseq2 -k -o /home/Documents/`
+
 
 The default extension and merging limit is 2.
 
