@@ -52,7 +52,9 @@ The default extension and merging limit is 2.
 This is a text file that contains the initial sub-graphs that are found by combining the individual P-values of the gene. The snapshot shows there core sub-graphs were found, writen in a linw with the combined p-value of the sub-graph at the end.
 
 `[ppp2r1a, tgfbr2, tgfb2, ppp2ca] 1.1103580381200124E-18
+
  [smad2, skp1a, smad3] 1.6569054494446366E-7
+ 
  [nog, bmp2, bmp5, bmpr2, gdf7, bmp6] 3.482452728268697E-4`
 
 #### ExtendedGraphs
@@ -60,7 +62,9 @@ This is a text file that contains the initial sub-graphs that are found by combi
 This file shows if any sub-graphs were extended by adding genes beyond its immediate neighbourhood.
 
 `[ppp2r1a, tgfbr2, tgfb2, ppp2ca] 1.1103580381200124E-18
+
  [smad2, skp1a, smad3, smad7, ifng, acvr1, smad5] 1.9580322709452766E-10
+ 
  [nog, bmp2, bmp5, bmpr2, gdf7, bmp6] 3.482452728268697E-4`
 
 #### MergedGraphs
