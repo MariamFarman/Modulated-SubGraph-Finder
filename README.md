@@ -156,6 +156,41 @@ A text file with directed adjacency list for MSF identified modulated sub-graphs
 `acvr1 smad5 ->`
 
 ### Tutorial MSF to StringApp
+## Prerequisites
+
+* Cytoscpae
+* StringApp (Cytoscape Plugin)
+* enhanceGraphics (Cytoscape Plugin)
+
+## Getting Started
+### Importing networks
+
+After sucessful download of Cytoscape and StringApp and enhanceGraphics inside cytoscape. Follow the steps
+
+`File->Import->Network->Public Databases`
+
+A new window would open then select `Data source ` as `String : protein query`. Next select the organism as Homo sapiens. Then enter the gene list and click `import`. The string network from String database would be downloaded with the user input gene list but interactions from String database. Since we would have our own interaction we can remove the String interactions by
+
+`select->Edges->Select all edges` The right click on any edge in the network and click `Edit->cut`. All the string dabase edges would be removed. To import our network (MSF identified NetworkFile)
+
+
+`File->Import->Network->File` and select the networkFile.
+
+### Merging networks
+
+We would overlay our network on the String network with our edges only. To do so 
+
+`Tools->Merge->Networks` a new window would open, using the `Union` option select the string network and MSF identified network. From the advance options  select the appropreate names of genes to be merged For example `SharedName` for MSF network and `display name` for String network. Then click `merge`.
+
+Now you would see MSF identified network overlayed with string network.
+
+### Enrichment Analysis
+
+To perfrom gene enrichment analysis on MSF network got to `Apps->STRING->Set as STRING network`. Next go to `Apps->STRING Enrichment->Retrieve Functional Enrichment`. This would perform functional enrichment for GO terms and KEGG pathways. Below the network a table with enrichment analysis would open. You can filter the table to a particular type of enrichment for example KEGG pathway using the filter symbol on top left of table. Using the settings option on top right you could make single genes to pie charts to show for example in which KEGG pathways is the gene present with different colors for different KEGG pathways.
+
+### Exporting Network
+
+You can either save the network as a png or a session file.
 
 
 
