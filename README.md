@@ -1,6 +1,6 @@
 # Modulated Sub-graph Finder
 
-The tool is used to find the significantly dis-regulated sub-graphs or cluster of genes from the host cell signaling network, giving these sub-graphs an overall significance of modulation by combining the individual p-values of the genes derived from differential genes expression analysis. 
+TModulated Sub-graph Finder (MSF) used to find the significantly dis-regulated sub-graphs or cluster of genes from the host cell signaling network, giving these sub-graphs an overall significance of modulation by combining the individual p-values of the genes derived from differential genes expression analysis. 
 
 ## Prerequisites
 
@@ -123,7 +123,7 @@ This output file gives details about the genes found in the sub-graphs. It shows
 `[bmp6, -bmpr2-nog, 0.079033613236002, 0.403941986198972, Intermediate]`
 
 
-### NetworkFile
+#### NetworkFile
 
 A text file with directed adjacency list for MSF identified modulated sub-graphs. This file could further be used to visualize the sub-graphs in other tools for example in Cytoscape.
 
@@ -155,15 +155,15 @@ A text file with directed adjacency list for MSF identified modulated sub-graphs
 
 `acvr1 smad5 ->`
 
-### Tutorial MSF to StringApp
-## Prerequisites
+## Tutorial MSF to StringApp
+### Prerequisites
 
 * Cytoscpae
 * StringApp (Cytoscape Plugin)
 * enhanceGraphics (Cytoscape Plugin)
 
-## Getting Started
-### Importing networks
+### Getting Started
+#### Importing networks
 
 After sucessful download of Cytoscape and StringApp and enhanceGraphics inside cytoscape. Follow the steps
 
@@ -176,7 +176,7 @@ A new window would open then select `Data source ` as `String : protein query`. 
 
 `File->Import->Network->File` and select the networkFile.
 
-### Merging networks
+#### Merging networks
 
 We would overlay our network on the String network with our edges only. To do so 
 
@@ -184,13 +184,23 @@ We would overlay our network on the String network with our edges only. To do so
 
 Now you would see MSF identified network overlayed with string network.
 
-### Enrichment Analysis
+#### Enrichment Analysis
 
 To perfrom gene enrichment analysis on MSF network got to `Apps->STRING->Set as STRING network`. Next go to `Apps->STRING Enrichment->Retrieve Functional Enrichment`. This would perform functional enrichment for GO terms and KEGG pathways. Below the network a table with enrichment analysis would open. You can filter the table to a particular type of enrichment for example KEGG pathway using the filter symbol on top left of table. Using the settings option on top right you could make single genes to pie charts to show for example in which KEGG pathways is the gene present with different colors for different KEGG pathways.
 
-### Exporting Network
+#### Exporting Network
 
 You can either save the network as a png or a session file.
+
+## Reactome Interaction File
+
+The interaction file used to build and test MSF was downloaded from reactome https://reactome.org/download-data under Functional interactions (FIs) version 2016. This file was prefiltered before use. All direct activation and inhibition interactions were filtered to be used by MSF testing.
+
+### Filtering
+
+First interactions that had no directions were removed from the file. Then indirect interactions were removed followed by interactions like expression regulation and catalyze. The remaining interaction were checked manually.
+
+
 
 
 
