@@ -1,6 +1,6 @@
 # Modulated Sub-graph Finder
 
-TModulated Sub-graph Finder (MSF) used to find the significantly dis-regulated sub-graphs or cluster of genes from the host cell signaling network, giving these sub-graphs an overall significance of modulation by combining the individual p-values of the genes derived from differential genes expression analysis. 
+Modulated Sub-graph Finder (**MSF**) used to find the significantly dis-regulated sub-graphs or cluster of genes from the host cell signaling network, giving these sub-graphs an overall significance of modulation by combining the individual p-values of the genes derived from differential genes expression analysis. 
 
 ## Prerequisites
 
@@ -25,15 +25,15 @@ Navigate to src folder of project and run command
 
 ## Input Data Preparation
 
-To find the Modulated sub-graphs you need two files. One file is tab-seperated text file containg the output of DESeq2/EdgeR analysis. Second file is a directed adjacency list with 3 columns, first two columns with interacting genes and the third column direction of the interaction. The gene identifiers should be same in both the input files. Example files included in Docs folder.
+To find the Modulated sub-graphs you need two files. One file is tab-separated text file containing the output of DESeq2/EdgeR analysis. Second file is a directed adjacency list with 3 columns, first two columns with interacting genes and the third column direction of the interaction. The gene identifiers should be same in both the input files. Example files included in Docs folder.
 
 ## Tutorial
 
-MSF has seven argument parameters 
+**MSF** has seven argument parameters 
 
 * `-p`	The path to differential gene expression analysis file 
 * `-i`	The path to network file (Interaction file)
-* `-t`	Software used for differntial gene expression analysis (DEseq2 or EdgeR)
+* `-t`	Software used for differential  gene expression analysis (DEseq2 or EdgeR)
 * `-e`	The extension limit (1 to 3 genes extension)
 * `-m`	The merging limit (1 to 3 genes merging)
 * `-k`	Output extra files (InitialGraphs, ExtendedGraphs and MergedGraphs)
@@ -50,7 +50,7 @@ The default extension and merging limit is 2.
 
 #### InitialGraphs
 
-This is a text file that contains the initial sub-graphs that are found by combining the individual P-values of the gene. The snapshot shows there core sub-graphs were found, writen in a linw with the combined p-value of the sub-graph at the end.
+This is a text file that contains the initial sub-graphs that are found by combining the individual P-values of the gene. The snapshot shows there core sub-graphs were found, written in a line with the combined p-value of the sub-graph at the end.
 
 `[ppp2r1a, tgfbr2, tgfb2, ppp2ca] 1.1103580381200124E-18`
 
@@ -60,7 +60,7 @@ This is a text file that contains the initial sub-graphs that are found by combi
 
 #### ExtendedGraphs
 
-This file shows if any sub-graphs were extended by adding genes beyond its immediate neighbourhood.
+This file shows if any sub-graphs were extended by adding genes beyond its immediate neighborhood.
 
 `[ppp2r1a, tgfbr2, tgfb2, ppp2ca] 1.1103580381200124E-18`
 
@@ -74,7 +74,7 @@ This is the text file showing if any or all the (extended/unextended) sub-graphs
 
 #### SourcesAndSinks
 
-This output file gives details about the genes found in the sub-graphs. It shows graph number followed by genes in the graph. Then each gene from the graph, its interactions in the graph, its fold chnage, individual p-value and in the last if it was identifed as a source, intermediate or sink.
+This output file gives details about the genes found in the sub-graphs. It shows graph number followed by genes in the graph. Then each gene from the graph, its interactions in the graph, its fold change, individual p-value and in the last if it was identified as a source, intermediate or sink.
 
 `[Graph 1]`
 
@@ -125,7 +125,7 @@ This output file gives details about the genes found in the sub-graphs. It shows
 
 #### NetworkFile
 
-A text file with directed adjacency list for MSF identified modulated sub-graphs. This file could further be used to visualize the sub-graphs in other tools for example in Cytoscape.
+A text file with directed adjacency list for **MSF** identified modulated sub-graphs. This file could further be used to visualize the sub-graphs in other tools for example in Cytoscape.
 
 `ppp2r1a tgfbr2 |-`
 
@@ -165,13 +165,13 @@ A text file with directed adjacency list for MSF identified modulated sub-graphs
 ### Getting Started
 #### Importing networks
 
-After sucessful download of Cytoscape and StringApp and enhanceGraphics inside cytoscape. Follow the steps
+After successful  download of Cytoscape and StringApp and enhanceGraphics inside cytoscape. Follow the steps
 
 `File->Import->Network->Public Databases`
 
 A new window would open then select `Data source ` as `String : protein query`. Next select the organism as Homo sapiens. Then enter the gene list and click `import`. The string network from String database would be downloaded with the user input gene list but interactions from String database. Since we would have our own interaction we can remove the String interactions by
 
-`select->Edges->Select all edges` The right click on any edge in the network and click `Edit->cut`. All the string dabase edges would be removed. To import our network (MSF identified NetworkFile)
+`select->Edges->Select all edges` The right click on any edge in the network and click `Edit->cut`. All the string database edges would be removed. To import our network (**MSF** identified NetworkFile)
 
 
 `File->Import->Network->File` and select the networkFile.
@@ -180,13 +180,13 @@ A new window would open then select `Data source ` as `String : protein query`. 
 
 We would overlay our network on the String network with our edges only. To do so 
 
-`Tools->Merge->Networks` a new window would open, using the `Union` option select the string network and MSF identified network. From the advance options  select the appropreate names of genes to be merged For example `SharedName` for MSF network and `display name` for String network. Then click `merge`.
+`Tools->Merge->Networks` a new window would open, using the `Union` option select the string network and **MSF** identified network. From the advance options  select the appropriate  names of genes to be merged For example `SharedName` for **MSF** network and `display name` for String network. Then click `merge`.
 
-Now you would see MSF identified network overlayed with string network.
+Now you would see **MSF** identified network overlapped  with string network.
 
 #### Enrichment Analysis
 
-To perfrom gene enrichment analysis on MSF network got to `Apps->STRING->Set as STRING network`. Next go to `Apps->STRING Enrichment->Retrieve Functional Enrichment`. This would perform functional enrichment for GO terms and KEGG pathways. Below the network a table with enrichment analysis would open. You can filter the table to a particular type of enrichment for example KEGG pathway using the filter symbol on top left of table. Using the settings option on top right you could make single genes to pie charts to show for example in which KEGG pathways is the gene present with different colors for different KEGG pathways.
+To perform gene enrichment analysis on **MSF** network got to `Apps->STRING->Set as STRING network`. Next go to `Apps->STRING Enrichment->Retrieve Functional Enrichment`. This would perform functional enrichment for GO terms and KEGG pathways. Below the network a table with enrichment analysis would open. You can filter the table to a particular type of enrichment for example KEGG pathway using the filter symbol on top left of table. Using the settings option on top right you could make single genes to pie charts to show for example in which KEGG pathways is the gene present with different colors for different KEGG pathways.
 
 #### Exporting Network
 
@@ -194,7 +194,7 @@ You can either save the network as a png or a session file.
 
 ## Reactome Interaction File
 
-The interaction file used to build and test MSF was downloaded from reactome https://reactome.org/download-data under Functional interactions (FIs) version 2016. This file was prefiltered before use. All direct activation and inhibition interactions were filtered to be used by MSF testing.
+The interaction file used to build and test **MSF** was downloaded from reactome [website] https://reactome.org/download-data under Functional interactions (FIs) version 2016. This file was pre-filtered before use. All direct activation and inhibition interactions were filtered to be used by **MSF** testing.
 
 ### Filtering
 
