@@ -194,7 +194,7 @@ You can either save the network as a png or a session file.
 
 ## Reactome Interaction File
 
-The interaction file used to build and test **MSF** was downloaded from reactome [website] https://reactome.org/download-data under Functional interactions (FIs) version 2016. This file was pre-filtered before use. All direct activation and inhibition interactions were filtered to be used by **MSF** testing.
+The interaction file used to build and test **MSF** was downloaded from reactome https://reactome.org/download-data under Functional interactions (FIs) version 2016. This file was pre-filtered before use. All direct activation and inhibition interactions were filtered to be used by **MSF** testing.
 
 ### Filtering
 
