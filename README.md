@@ -30,7 +30,7 @@ To find the Modulated sub-graphs you need two files. One file is tab-separated t
 
 Navigate to folder containing the jar file and the example files and run command
 
-`java -jar ModulatedSubPathFinder.jar -p ExampleDEAnalysis.txt -i ExampleInteractions.txt -t DEseq2 -k -o /home/Documents/`
+`java -jar ModulatedSubgraphFinder.jar -p ExampleDEGAnalysis_DEseq2.csv -i ExampleInteractions.txt -t DEseq2 -k -o /home/Documents/`
 
 The default extension and merging limit is 2.
 
@@ -58,7 +58,14 @@ This file shows if any sub-graphs were extended by adding genes beyond its immed
 
 #### MergedGraphs
 
-This is the text file showing if any or all the (extended/unextended) sub-graphs merge with each other or not.
+This is the text file showing if any or all the (extended/unextended) sub-graphs merge with each other or not. In this case the graphs did not merge.
+
+
+`[ppp2r1a, tgfbr2, tgfb2, ppp2ca] 1.1103580381200124E-18`
+
+`[smad2, skp1a, smad3, smad7, ifng, acvr1, smad5] 1.9580322709452766E-10`
+ 
+`[nog, bmp2, bmp5, bmpr2, gdf7, bmp6] 3.482452728268697E-4`
 
 #### SourcesAndSinks
 
@@ -80,14 +87,14 @@ This output file gives details about the genes found in the sub-graphs. It shows
 
 `[smad2, skp1a, smad3, smad7, ifng, acvr1, smad5]`
 
-`[smad2, -smad7-acvr1-skp1a, 1.20822323638527, 1.51528460481E-4, Sink]
+`[smad2, -smad7-acvr1-skp1a, 1.20822323638527, 1.51528460481E-4, Sink]`
 
- [skp1a, -smad2-smad3, 0.47396118683819, 0.014525956708056, Source]`
- 
-`[smad3, -smad7-skp1a, -0.193102843027487, 0.146036813182214, Sink]
+`[skp1a, -smad2-smad3, 0.47396118683819, 0.014525956708056, Source]`
 
- [smad7, -smad2-smad3-smad5-ifng, 0.100940948274761, 0.562318600418486, Intermediate]`
- 
+`[smad3, -smad7-skp1a, -0.193102843027487, 0.146036813182214, Sink]`
+
+`[smad7, -smad2-smad3-smad5-ifng, 0.100940948274761, 0.562318600418486, Intermediate]`
+
 `[ifng, -smad7, -0.411195572576727, 2.12566137193E-4, Source]`
 
 `[acvr1, -smad5-smad2, -0.360351622623896, 0.017364084706018, Source]`
