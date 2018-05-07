@@ -48,7 +48,7 @@ This is a text file that contains the initial sub-graphs that are found by combi
 
 #### ExtendedGraphs
 
-This file shows if any sub-graphs were extended by adding genes beyond its immediate neighborhood.
+This file shows if any sub-graphs were extended by adding genes beyond its immediate neighborhood. For example graph is extended by 4 genes.
 
 `[ppp2r1a, tgfbr2, tgfb2, ppp2ca] 1.1103580381200124E-18`
 
