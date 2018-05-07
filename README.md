@@ -7,20 +7,9 @@ Modulated Sub-graph Finder (**MSF**) used to find the significantly dis-regulate
 * Java version 8
 * Jdk 1.8
 
-## Download
+## Download Linux && Windows
 
-### Linux
-
-Copy the whole project of Modulated Sub-graph Finder from github into a new directory
-
-`git clone https://github.com/MariamFarman/Modulated-SubGraph-Finder`
-
-### Windows
-
-## Installation
-Navigate to src folder of project and run command
-
-    `make`
+Download the ModulatedSubgraphFinder jar file and the example files for tutorial.
 
 
 ## Input Data Preparation
@@ -39,10 +28,9 @@ To find the Modulated sub-graphs you need two files. One file is tab-separated t
 * `-k`	Output extra files (InitialGraphs, ExtendedGraphs and MergedGraphs)
 * `-o`	The path to output folder
 
-Navigate  to src folder of project and run command
+Navigate to folder containing the jar file and the example files and run command
 
-`java -jar ModulatedSubPathFinder.jar -p ../Docs/ExampleDEAnalysis.txt -i ../Docs/ExampleInteractions.txt -t DEseq2 -k -o /home/Documents/`
-
+`java -jar ModulatedSubPathFinder.jar -p ExampleDEAnalysis.txt -i ExampleInteractions.txt -t DEseq2 -k -o /home/Documents/`
 
 The default extension and merging limit is 2.
 
@@ -56,7 +44,7 @@ This is a text file that contains the initial sub-graphs that are found by combi
 
 `[smad2, skp1a, smad3] 1.6569054494446366E-7`
  
- `[nog, bmp2, bmp5, bmpr2, gdf7, bmp6] 3.482452728268697E-4`
+`[nog, bmp2, bmp5, bmpr2, gdf7, bmp6] 3.482452728268697E-4`
 
 #### ExtendedGraphs
 
