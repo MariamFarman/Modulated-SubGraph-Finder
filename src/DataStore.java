@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.print.attribute.standard.MediaSize.NA;
 import javax.print.attribute.standard.MediaSize.Other;
+
 
 public class DataStore {
 
@@ -26,8 +28,10 @@ public class DataStore {
 	static Map<String, List<TempModel>> genesKeyInteractionPairTemp = new HashMap<String, List<TempModel>>();
 
 	static Hashtable<String, String> geneInfoHashTable = new Hashtable<>();
+	
 
 	static String outputPath;
+	static String dEgType;
 	private static DataStore instance = null;
 
 	public static String getOutputPath() {
@@ -38,8 +42,9 @@ public class DataStore {
 		DataStore.outputPath = outputPath;
 	}
 
-	public static void DataStor(String psheet, String interaction, String outputPathX) {
+	public static void DataStor(String psheet, String interaction, String outputPathX, String dEgtype) {
 		outputPath = outputPathX;
+		dEgType = dEgtype;
 		readPValuesFromTextFile(psheet);
 		readInteractionsFromTextFile(interaction);
 		createHashListFromEdegeClassList();
@@ -92,19 +97,33 @@ public class DataStore {
 		List<String> list = new ArrayList<>();
 		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 			list = stream.map(String::toUpperCase).collect(Collectors.toList());
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		int count = 0;
 		list.remove(0);
-		for (String string : list) {
+		for (String string : list) { 
 			count = count + 1;
 			geneInfo = new GenesInfo();
-			String[] splitArray = string.split("\\s+");
-			String geneName = splitArray[0].replace("\"", "");
-			String pvalue = splitArray[4];
-			geneInfo.setGeneName(geneName.toLowerCase());
+			String[] splitArray = string.split("\\s+"); 
+			String geneName = splitArray[0].replace("\"", ""); 
+			String pvalue = "";
+			if (dEgType.equals("DEseq2")){
+				try{
+				pvalue = splitArray[5];
+				} catch (Exception e) {
+					System.out.println("Please give Tab-seperated file");
+				}
+			}
+			else {
+				try{
+					pvalue = splitArray[4];
+					} catch (Exception e) {
+						System.out.println("Please give Tab-seperated file");
+					}
+			}
+		
+				geneInfo.setGeneName(geneName.toLowerCase());
 			if (pvalue.equalsIgnoreCase("NA"))
 				continue;
 			double tempasd = (Double.parseDouble(pvalue));
@@ -126,6 +145,8 @@ public class DataStore {
 			e.printStackTrace();
 		}
 		int count = 0;
+		int mismatchedCount = 0;
+		int listSize = list.size();
 		for (String string : list) {
 			count = count + 1;
 			GenesInteractions edgeClass = new GenesInteractions();
@@ -139,7 +160,10 @@ public class DataStore {
 				Double pvalue2 = genesKeyPValuesPair.get(to);
 				if (pvalue == null || pvalue == Double.NaN || pvalue2 == null || pvalue2 == Double.NaN) // temperory
 																										// condition
+				{
+					mismatchedCount ++;
 					continue;
+				}
 			} catch (Exception e) {
 				pvalueFound = false;
 			}
@@ -153,6 +177,11 @@ public class DataStore {
 			edgeClass.setColmn2(to);
 			edgeClass.setSymbol(symbol);
 			genesInteractionsListComplete.add(edgeClass);
+		}
+		{
+		if (mismatchedCount==listSize){
+			System.out.println("Gene Identifers do not match in the input files.");
+		System.exit(0);}
 		}
 	}
 
@@ -172,12 +201,10 @@ public class DataStore {
 			genesKeyInteractionPair.put(uniqueKey, valuesList);
 		}
 	}
-
-	// TEMPERORY CODE
 	
 
 	private static void refreshList() {
-		System.out.println("before = " + genesInteractionsListComplete.size());
+		
 		List<GenesInteractions> genesInteractionsList = new ArrayList<>();
 		for (GenesInteractions edgeClass : genesInteractionsListComplete) {
 			String symbol = edgeClass.getSymbol();

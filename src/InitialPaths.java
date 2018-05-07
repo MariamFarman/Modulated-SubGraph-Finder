@@ -15,6 +15,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+
+
+
 
 public class InitialPaths {
 	static List<GenesInfo> genesInfoList = new ArrayList<GenesInfo>();
@@ -30,47 +36,73 @@ public class InitialPaths {
 	static int rowCounter = 0;
 	static int extensionLimit;
 	static int mergeLimit;
-	static String initialPathOutputFile, pvalueInput, interctionInput;
+	static Boolean printExtraFiles = false;
+	static String initialPathOutputFile, pvalueInput, interctionInput, dEgType;
 
 	public static void main(String[] args) throws Exception {
-		if (args.length == 3 || args.length == 5) {
-			if (args.length == 3) {
-				extensionLimit = 2;
-				mergeLimit = 1;
-				pvalueInput = args[0];
-				interctionInput = args[1];
-				initialPathOutputFile = args[2];
-				network_File = args[2];
-			} else { // in case of 5
-				int tempExtension = Integer.parseInt(args[2]);
-				int tempMerging = Integer.parseInt(args[3]);
-				if (tempExtension >= 3 || tempExtension < 1) {
-					System.out.println("Extension Limit out of bound");
-					return;
-				}
-				else if (tempMerging > 4 || tempMerging < 1) {
-					System.out.println("Merging Limit out of bound");
-					return;
-				}
-				
-				else {
-					extensionLimit = tempExtension;
-					mergeLimit = tempMerging;
-					pvalueInput = args[0];
-					interctionInput = args[1];
-					initialPathOutputFile = args[4];
-					network_File = args[4];
-				}
-			}
+		Options options = new Options();
 
+		// add t option
+		options.addOption("p", true, "DEG input file path");
+		options.addOption("i", true, "Interaction input file path");
+		options.addOption("t", true, "DGEA type DEseq2 or EdgeR");
+		options.addOption("e", false, "Extension Limit to be used");
+		options.addOption("m", false, "Merging limit to be used");
+		options.addOption("o", true, "Output folder path");
+		options.addOption("k", false, "Extra output files printed");
+
+		CommandLineParser parser = new DefaultParser();
+		org.apache.commons.cli.CommandLine cmd = parser.parse(options, args);
+
+		if (cmd.hasOption("p")) {
+			pvalueInput = cmd.getOptionValue("p");
 		} else {
-			System.out.println("Error");
+			System.out.println("Please give DEG input file path ");
 			return;
 		}
+		if (cmd.hasOption("i")) {
+			interctionInput = cmd.getOptionValue("i");
+		} else {
+			System.out.println("Please give Interaction input file path ");
+			return;
+		}
+
+		if (cmd.hasOption("o")) {
+			initialPathOutputFile = cmd.getOptionValue("o");
+			network_File = cmd.getOptionValue("o");
+		} else {
+			System.out.println("Please give Output folder path");
+			return;
+		}
+
+		if (cmd.hasOption("e")) {
+			extensionLimit = Integer.parseInt(cmd.getOptionValue("e"));
+		} else {
+			extensionLimit = 2;
+		}
+
+		if (cmd.hasOption("m")) {
+			mergeLimit = Integer.parseInt(cmd.getOptionValue("m"));
+		} else {
+			mergeLimit = 2;
+		}
+		if (cmd.hasOption("k")) {
+			printExtraFiles = true;
+		}
+
+		if (cmd.hasOption("t")) {
+			dEgType = cmd.getOptionValue("t");
+			if ((!dEgType.equalsIgnoreCase("DEseq2")) && (!dEgType.equalsIgnoreCase("EdgeR"))) {
+				System.out.println("Please specify Differential gene expression analysis type DEseq2 or EdgeR ");
+				return;
+			}
+
+		}
+
 		System.out.println("MSF Runing");
-		Step1Output = initialPathOutputFile + "InitialPaths.text";
+		Step1Output = initialPathOutputFile + "InitialGraphs.text";
 		network_File = initialPathOutputFile + "NetworkFile.text";
-		DataStore.DataStor(pvalueInput, interctionInput, initialPathOutputFile); 
+		DataStore.DataStor(pvalueInput, interctionInput, initialPathOutputFile, dEgType);
 		geneInfo = DataStore.getpSheet();
 		genesInfoList = DataStore.getpSheetList();
 		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
@@ -78,8 +110,8 @@ public class InitialPaths {
 		genesKeyPValuesPair = DataStore.getpsheetKeyValyePair();
 		genesKeyInteractionPair = DataStore.getedgeListHashMap();
 		identifyingInitialPaths();
-		System.out.println("Found Initial Paths");
-		ExtensionMerging.main(Allpaths, initialPathOutputFile,extensionLimit,mergeLimit);
+		System.out.println("Found Initial Graphs");
+		ExtensionMerging.main(Allpaths, initialPathOutputFile, extensionLimit, mergeLimit, printExtraFiles);
 	}
 
 	private static List<String> sortpSheetList(List<String> mainValueList) {
@@ -116,6 +148,7 @@ public class InitialPaths {
 		Map<String, List<TempModel>> interactingGeneFrom = new HashMap<String, List<TempModel>>();
 		Map<String, List<TempModel>> interactingGeneTo = new HashMap<String, List<TempModel>>();
 		HashMap<String, String> geneInteractingAncestor = new HashMap<>();
+		HashMap<String, List<String>> geneInteractingAncestorTemp = new HashMap<>();
 		DataStore.createHashListFromEdegeClassListTemp(0);
 		interactingGeneFrom = DataStore.getInteractingGeneFrom();
 		interactingGeneTo = DataStore.getInteractingGeneTo();
@@ -144,7 +177,7 @@ public class InitialPaths {
 			for (String string : interactingGenes) {
 				geneInteractingAncestor.put(string, rootGeneName);
 			}
-			interactingGenes = sortpSheetList(interactingGenes); 
+			interactingGenes = sortpSheetList(interactingGenes);
 			selectedGenes.add(rootGeneName);
 			int counterCheck = 0;
 			for (int counter = counterCheck; interactingGenes != null
@@ -177,6 +210,11 @@ public class InitialPaths {
 					newStringList.add(temp);
 					if (!geneInteractingAncestor.containsKey(temp))
 						geneInteractingAncestor.put(temp.trim(), genekey.trim());
+					List<String> tempStringList = geneInteractingAncestorTemp.get(temp.trim());
+					if (tempStringList==null || tempStringList.size()==0)
+					tempStringList = new ArrayList<>();
+					tempStringList.add(genekey.trim());
+					geneInteractingAncestorTemp.put(temp.trim(), tempStringList);
 				}
 				for (String interact : interactingGenes) {
 					if (iterationSet.contains(interact))
@@ -189,8 +227,17 @@ public class InitialPaths {
 			if (selectedGenes.size() > 2) {
 				for (String stringX : selectedGenes) {
 					try {
-
 						String parentGeneOFChildGene = geneInteractingAncestor.get(stringX);
+						if (!selectedGenes.contains(parentGeneOFChildGene))
+						{
+							List<String> tempStringList = geneInteractingAncestorTemp.get(stringX);
+							for (String string : tempStringList) {
+								if (selectedGenes.contains(string)){
+									parentGeneOFChildGene = string;
+									break;
+								}
+							}
+						}
 						List<TempModel> tempModelList = interactingGeneTo.get(parentGeneOFChildGene);
 						if (tempModelList == null)
 							continue;
@@ -209,7 +256,7 @@ public class InitialPaths {
 								printx = tempp.getInteractingGene() + " " + parentGeneOFChildGene + " "
 										+ tempp.getSymbol();
 							} else {
-								System.out.println("");
+								//System.out.println("");
 							}
 
 						} else {
@@ -218,12 +265,13 @@ public class InitialPaths {
 						}
 						writeInFIle_NetworkFile(printx);
 					} catch (Exception e) {
-						System.out.println("");
 					}
 
 				}
 				Allpaths.add(selectedGenes);
-				writeInFIle(selectedGenes, combinePValue);
+				if (printExtraFiles == true) {
+					writeInFIle(selectedGenes, combinePValue);
+				}
 			}
 		}
 	}

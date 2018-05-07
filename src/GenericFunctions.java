@@ -7,16 +7,20 @@ import java.util.List;
 import java.math.BigDecimal;
 
 public class GenericFunctions {
-	
 
 	static double hartungFunction(List<Double> pvalueList) {
 		if (pvalueList.size() == 1 || pvalueList == null)
 			return Double.NaN;
 		List<BigDecimal> qnormList = new ArrayList<>();
 		int n = pvalueList.size();
-		for (Double pavlue : pvalueList) {
-			qnormList.add(new BigDecimal(NormalCDFInverse(pavlue)));
-		}
+			for (Double pavlue : pvalueList) {
+				try{
+				qnormList.add(new BigDecimal(NormalCDFInverse(pavlue)));
+				}catch (Exception e)
+				{
+					return Double.NaN;
+				}
+			}
 		BigDecimal sum = new BigDecimal(0.0);
 		BigDecimal avt = new BigDecimal(0.0);
 		for (BigDecimal qnorm : qnormList) {
@@ -131,6 +135,7 @@ public class GenericFunctions {
 
 	static double NormalCDFInverse(double p) {
 		if (p <= 0.0 || p >= 1.0) {
+              return 0;
 		}
 		if (p < 0.5) {
 			return -RationalApproximation(Math.sqrt(-2.0 * Math.log(p)));
@@ -200,5 +205,5 @@ public class GenericFunctions {
 		BigDecimal finalAddition = OneMinusNeg.add(megMultioneMinusY);
 
 		return finalAddition;
-		}
+	}
 }

@@ -46,15 +46,17 @@ public class ExtensionMerging {
 	static List<StringListSorting> sortingList;
 	static String network_File, mergingNetwork;
 	static int arrayListSize = 0, extensionnLimit = 2, mergingLimit = 1;
+	static Boolean printExtraFiles = false;
 
-	public static void main(List<ArrayList<String>> Allpaths, String filePath, int eLimit, int mLimit) throws Exception {
+	public static void main(List<ArrayList<String>> Allpaths, String filePath, int eLimit, int mLimit, Boolean printExtraFilesTemp) throws Exception {
 		extensionnLimit = eLimit;
 		mergingLimit = mLimit;
 		System.out.println("Now Looking for Extenion and Merging");
-		Step2Output = DataStore.getOutputPath() + "ExtendedPath.text";
-		Step3Output = DataStore.getOutputPath() + "MergedPath.text";
+		Step2Output = DataStore.getOutputPath() + "ExtendedGraphs.text";
+		Step3Output = DataStore.getOutputPath() + "MergedGraphs.text";
 		network_File = filePath + "NetworkFile.text";
 		mergingNetwork = filePath + "merging.text";
+		printExtraFiles = printExtraFilesTemp;
 		genesInfo = DataStore.getpSheet();
 		geneInfoList = DataStore.getpSheetList();
 		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
@@ -100,8 +102,10 @@ public class ExtensionMerging {
 				AllMergedpaths.add((ArrayList<String>) getGenesList(x));
 		}
 
-		System.out.println("CLass-ExtensioMerging-writeInFIleMerging");
+		if (printExtraFiles == true)
+		{
 		writeInFIleMergedPaths();
+		}
 		System.out.println("Extension and Merging Done");
 		 FinalThreads.main(AllMergedpaths);
 	}
@@ -200,14 +204,16 @@ public class ExtensionMerging {
 						pathSet.add(pathNumber);
 						setGenesList(newExtendedPath, pathNumber);
 						pathExtended = true;
-					} else if (checkPathwithSig(threeLengthPath, pathNumber)) {
+					} else if (checkPathwithSig(threeLengthPath, pathNumber,string)) {
 						pathExtended = true;
 					}
 				} 
 			}
 			
 		}
+		if (printExtraFiles == true){
 		writeInFIleExtension();
+		}
 	}
 
 	private static synchronized void writeInFIle_NetworkFile(String output) {
@@ -231,7 +237,7 @@ public class ExtensionMerging {
 
 	}
 
-	private static boolean checkPathwithSig(List<String> ext, int pathNumber) {
+	private static boolean checkPathwithSig(List<String> ext, int pathNumber,String string) {
 		boolean upadteCheck = false;
 		for (int qw = ext.size(); qw >= 1; qw--) {
 			List<String> temp = new ArrayList<String>();
@@ -256,9 +262,48 @@ public class ExtensionMerging {
 				originalPathHartung = 2E-16;
 			Double extendedPathHartung = GenericFunctions.hartungFunction(extendedPathCP);
 			if (originalPathHartung > extendedPathHartung) {
-				for (String as : ext) {
+				for (String as : temp) {
 					step2GnesDone.add(as);
 				}
+				HashMap<String, String> geneInteractingAncestor = new HashMap<>();
+				for (int countX = 0; countX < temp.size(); countX++) {
+					String ax = temp.get(countX);
+					if (countX == 0)
+						geneInteractingAncestor.put(ax, string.trim());
+					else {
+						geneInteractingAncestor.put(temp.get(countX),temp.get(countX - 1));
+					}
+				}
+				
+				for (String as : temp) {
+					step2GnesDone.add(as);
+					String parentGeneOFChildGene = geneInteractingAncestor.get(as);
+					List<TempModel> tempModelList = interactingGeneTo.get(parentGeneOFChildGene);
+					List<TempModel> xx = tempModelList.stream()
+							.filter(x -> x.interactingGene.equalsIgnoreCase(as.trim()))
+							.collect(Collectors.toList());
+					TempModel tempp = new TempModel();
+					ArrayList<String> printa = new ArrayList<>();
+					String printx = "";
+					if (xx.size() < 1) {
+						tempModelList = interactingGeneFrom.get(parentGeneOFChildGene);
+						xx = tempModelList.stream().filter(x -> x.interactingGene.equalsIgnoreCase(as.trim()))
+								.collect(Collectors.toList());
+						if (xx.size() > 0) {
+							tempp = xx.get(0);
+							printx = tempp.getInteractingGene() + " " + parentGeneOFChildGene + " "
+									+ tempp.getSymbol();
+						}
+					} else {
+						tempp = xx.get(0);
+						printx = parentGeneOFChildGene + " " + tempp.getInteractingGene() + " "
+								+ tempp.getSymbol();
+					}
+					writeInFIle_NetworkFile(printx);
+					// close file writing
+				}
+				
+				// clsoing here
 				setGenesList(newExtendedPath, pathNumber);
 				upadteCheck = true;
 				return true;
@@ -329,6 +374,7 @@ public class ExtensionMerging {
 						iterationSet.add(item1);
 						parentGene = new ArrayList<>();
 						List<String> interactingGenes2 = genesKeyInteractionPair.get(item1);
+						interactingGenes2 = sortGeneInfoList(interactingGenes2);
 						parentGene.add(gene);
 						geneInteractingAncestor.put(item1, gene);
 						parentGene.add(item1);
@@ -342,6 +388,7 @@ public class ExtensionMerging {
 									iterationSet.add(item2);
 									parentGene = new ArrayList<>();
 									List<String> interactingGenes3 = genesKeyInteractionPair.get(item2);
+									interactingGenes3 = sortGeneInfoList(interactingGenes3);
 									parentGene.add(gene);
 									parentGene.add(item1);
 									geneInteractingAncestor.put(item2, item1);
@@ -584,7 +631,7 @@ public class ExtensionMerging {
 			} catch (Exception e) {
 				temp.setpValue(0.0);
 			}
-			if (temp.getpValue() > 0)
+			if (temp.getpValue() > 0 && temp.getpValue()<1)
 				tempList.add(temp);
 		}
 

@@ -28,7 +28,7 @@ public class FinalThreads {
 	static int sourceCounter = 0, sinkCounter = 0;
 
 	public static void main(List<ArrayList<String>> AllMergedpaths) throws Exception {
-		fileoutPathText = DataStore.getOutputPath() + "FinalOutput.text";
+		fileoutPathText = DataStore.getOutputPath() + "SourcesAndSinks.text";
 		System.out.println("Finding Sources and Sinks");
 		genesInfoList = DataStore.getpSheetList();
 		genesInteractionsListComplete = DataStore.getedgeClassListComplete();
@@ -49,7 +49,7 @@ public class FinalThreads {
 		List<String> prepareListTemp = new ArrayList<String>();
 		prepareListTemp.add("SOurce" + sourceCounter);
 		prepareListTemp.add("Sink" + sinkCounter);
-		System.out.println("Sources and Sinks found....Creating Final output file");
+		System.out.println("Sources and Sinks found....Creating output files");
 
 	}
 
@@ -58,7 +58,7 @@ public class FinalThreads {
 		List<String> prepareList = new ArrayList<String>();
 		sourceCounter = 0;
 		sinkCounter = 0;
-		prepareList.add("Path " + pathNumber);
+		prepareList.add("Graph " + pathNumber);
 		writeInFIle(prepareList);
 		prepareList = new ArrayList<String>();
 		List<Double> pavlueListString = new ArrayList<>();

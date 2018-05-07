@@ -1,6 +1,16 @@
 public class GenesInteractions {
 	String column1;
 	String colmn2;
+	String symbol;
+	
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
 
 	public String getColumn1() {
 		return column1;
