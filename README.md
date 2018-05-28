@@ -69,7 +69,7 @@ This is the text file showing if any or all the (extended/unextended) sub-graphs
 
 #### SourcesAndSinks
 
-This output file gives details about the genes found in the sub-graphs. It shows graph number followed by genes in the graph. Then each gene from the graph, its interactions in the graph, its fold change, individual p-value and in the last if it was identified as a source, intermediate or sink.
+This output file gives details about the genes found in the sub-graphs. It shows graph number followed by genes in the graph. Then each gene from the graph, its fold change, individual p-value and in the last if it was identified as a source, intermediate or sink.
 
 `[Graph 1]`
 
