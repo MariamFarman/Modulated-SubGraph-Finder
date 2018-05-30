@@ -32,7 +32,7 @@ Navigate to folder containing the jar file and the example files and run command
 
 `java -jar ModulatedSubgraphFinder.jar -p ExampleDEGAnalysis_DEseq2.csv -i ExampleInteractions.csv -t DEseq2 -k yes -o /home/Documents/`
 
-The default extension and merging limit is 2.
+The default extension and merging limit is 2. If you do not want to output extra files skip the -k argument.
 
 ### Output Files
 
