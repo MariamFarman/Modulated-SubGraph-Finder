@@ -7,7 +7,7 @@ Modulated Sub-graph Finder (**MSF**) used to find the significantly dis-regulate
 * Java version 8
 * Jdk 1.8
 
-## Download Linux && Windows
+## Download Linux & Windows
 
 Download the ModulatedSubgraphFinder.jar file and the example files for tutorial.
 
@@ -71,86 +71,86 @@ This is the text file showing if any or all the (extended/unextended) sub-graphs
 
 This output file gives details about the genes found in the sub-graphs. It shows graph number followed by genes in the graph. Then each gene from the graph, its fold change, individual p-value and in the last if it was identified as a source, intermediate or sink. The sources have impact score against it.
 
-`[Graph 1]
-[ppp2r1a, tgfbr2, tgfb2, ppp2ca]
-[ppp2r1a, 343.680151982419, 1.4E-7, Source, 3/4 = 75.000]
-[tgfbr2, 154.225593438929, 0.03294361100258, Intermediate]
-[tgfb2, 505.093869916889, 4.0E-5, Sink]
-[ppp2ca, 525.820339004501, 6.44660834994E-4, Source, 3/4 = 75.000]
-[Graph 2]
-[smad2, skp1a, smad3, smad7, ifng, acvr1, smad5]
-[smad2, 28.1552749566574, 1.51528460481E-4, Intermediate]
-[skp1a, 843.231746773892, 0.014525956708056, Sink]
-[smad3, 176.442049495414, 0.146036813182214, Source, 2/7 = 28.571]
-[smad7, 606.619477359416, 0.562318600418486, Source, 4/7 = 57.143]
-[ifng, 135.622073938663, 2.12566137193E-4, Sink]
-[acvr1, 100.463207564239, 0.017364084706018, Source, 2/7 = 28.571]
-[smad5, 675.586240911088, 0.005281642821289, Sink]
-[Graph 3]
-[nog, bmp2, bmp5, bmpr2, gdf7, bmp6]
-[nog, 48.0012337399973, 0.005498079382534, Intermediate]
-[bmp2, 186.03559350895, 0.237098851922717, Sink]
-[bmp5, 57.9279489451268, 0.419057181261883, Sink]
-[bmpr2, 814.343493775222, 0.017218841862483, Source, 2/6 = 33.333]
-[gdf7, 142.559614133974, 0.011845850200211, Source, 5/6 = 83.333]
-[bmp6, 442.598787102063, 0.403941986198972, Sink]`
+`[Graph 1]`
+`[ppp2r1a, tgfbr2, tgfb2, ppp2ca]`
+`[ppp2r1a, 343.680151982419, 1.4E-7, Source, 3/4 = 75.000]`
+`[tgfbr2, 154.225593438929, 0.03294361100258, Intermediate]`
+`[tgfb2, 505.093869916889, 4.0E-5, Sink]`
+`[ppp2ca, 525.820339004501, 6.44660834994E-4, Source, 3/4 = 75.000]`
+`[Graph 2]`
+`[smad2, skp1a, smad3, smad7, ifng, acvr1, smad5]`
+`[smad2, 28.1552749566574, 1.51528460481E-4, Intermediate]`
+`[skp1a, 843.231746773892, 0.014525956708056, Sink]`
+`[smad3, 176.442049495414, 0.146036813182214, Source, 2/7 = 28.571]`
+`[smad7, 606.619477359416, 0.562318600418486, Source, 4/7 = 57.143]`
+`[ifng, 135.622073938663, 2.12566137193E-4, Sink]`
+`[acvr1, 100.463207564239, 0.017364084706018, Source, 2/7 = 28.571]`
+`[smad5, 675.586240911088, 0.005281642821289, Sink]`
+`[Graph 3]`
+`[nog, bmp2, bmp5, bmpr2, gdf7, bmp6]`
+`[nog, 48.0012337399973, 0.005498079382534, Intermediate]`
+`[bmp2, 186.03559350895, 0.237098851922717, Sink]`
+`[bmp5, 57.9279489451268, 0.419057181261883, Sink]`
+`[bmpr2, 814.343493775222, 0.017218841862483, Source, 2/6 = 33.333]`
+`[gdf7, 142.559614133974, 0.011845850200211, Source, 5/6 = 83.333]`
+`[bmp6, 442.598787102063, 0.403941986198972, Sink]`
 
 
 #### NetworkFile
 
 A text file with directed adjacency list for **MSF** identified modulated sub-graphs. This file could further be used to visualize the sub-graphs in other tools for example in Cytoscape. The last two columns are used as edge attributes to be imported in Cytoscape.
 
-`tgfbr2 ppp2r1a |- 0  1 
+`tgfbr2 ppp2r1a |- 0  1 `
 
-tgfb2 tgfbr2 <- 0  1 
+`tgfb2 tgfbr2 <- 0  1 `
 
-tgfbr2 ppp2ca |- 0  1 
+`tgfbr2 ppp2ca |- 0  1 `
 
-skp1a smad2 <- 0  1 
+`skp1a smad2 <- 0  1 `
 
-skp1a smad3 <- 0  1 
+`skp1a smad3 <- 0  1 `
 
-nog bmp2 -> 1  0 
+`nog bmp2 -> 1  0 `
 
-nog bmp5 -> 1  0 
+`nog bmp5 -> 1  0 `
 
-bmp2 bmpr2 <- 0  1 
+`bmp2 bmpr2 <- 0  1 `
 
-nog gdf7 <- 0  1 
+`nog gdf7 <- 0  1 `
 
-nog bmp6 -> 1  0 
+`nog bmp6 -> 1  0 `
 
-smad7 smad2 -> 1  0 
+`smad7 smad2 -> 1  0 `
 
-ifng smad7 <- 0  1 
+`ifng smad7 <- 0  1 `
 
-acvr1 smad3 <-> 1  1 
+`acvr1 smad3 <-> 1  1 `
 
-acvr1 smad5 -> 1  0 `
+`acvr1 smad5 -> 1  0 `
 
 #### SourceWeight
 
 This file has node attributes for each gene to be imported into Cytoscape. First column with gene name, second column the node size depending on the source weight and the last column is LogFoldchange to show type of regulation.
 
-`ppp2r1a  750.000  -1.15250657211695
-tgfbr2  10.000  0.357347052992014
-tgfb2  10.000  -0.273710254909285
-ppp2ca  750.000  -0.225269184801659
+`ppp2r1a  750.000  -1.15250657211695`
+`tgfbr2  10.000  0.357347052992014`
+`tgfb2  10.000  -0.273710254909285`
+`ppp2ca  750.000  -0.225269184801659`
 
-smad2  10.000  1.20822323638527
-skp1a  10.000  0.47396118683819
-smad3  285.714  -0.193102843027487
-smad7  571.429  0.100940948274761
-ifng  10.000  -0.411195572576727
-acvr1  285.714  -0.360351622623896
-smad5  10.000  0.43197314616271
+`smad2  10.000  1.20822323638527`
+`skp1a  10.000  0.47396118683819`
+`smad3  285.714  -0.193102843027487`
+`smad7  571.429  0.100940948274761`
+`ifng  10.000  -0.411195572576727`
+`acvr1  285.714  -0.360351622623896`
+`smad5  10.000  0.43197314616271`
 
-nog  10.000  -0.397877024648883
-bmp2  10.000  -0.135915332971465
-bmp5  10.000  -0.21104227566159
-bmpr2  333.333  0.255224975603306
-gdf7  833.333  0.334306828205764
-bmp6  10.000  0.079033613236002`
+`nog  10.000  -0.397877024648883`
+`bmp2  10.000  -0.135915332971465`
+`bmp5  10.000  -0.21104227566159`
+`bmpr2  333.333  0.255224975603306`
+`gdf7  833.333  0.334306828205764`
+`bmp6  10.000  0.079033613236002`
 
 
 ## Tutorial MSF to StringApp
