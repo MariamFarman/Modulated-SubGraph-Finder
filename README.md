@@ -217,7 +217,7 @@ Drop down Source Arrow Shape
 
  `Mapping Type -> Discrete Mapping`
  
- `For 1 selec the arrow ->`
+ `For 1 select the arrow ->`
  
 Drop down Target Arrow Shape
 
@@ -225,7 +225,7 @@ Drop down Target Arrow Shape
 
  `Mapping Type -> Discrete Mapping`
  
- `For 1 selec the arrow ->`
+ `For 1 select the arrow ->`
  
  To add node attributes follow steps
  
