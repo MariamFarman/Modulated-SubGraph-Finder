@@ -207,7 +207,7 @@ Click on column 2 and set as target node
 Click on column 3 and set as interaction type.
 Click ok.
 
-The MSF netwok has been imported to Cytoscape, to add directional follow the next steps
+The MSF network has been imported to Cytoscape, to add directional follow the next steps
 
 Click on Style
 Select Edge attributes
