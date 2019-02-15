@@ -213,15 +213,15 @@ Click on Style
 Select Edge attributes
 Drop down Source Arrow Shape
 
-`Column -> Column 6
- Mapping Type -> Discrete Mapping
- For 1 selec the arrow ->`
+`Column -> Column 6`
+ `Mapping Type -> Discrete Mapping`
+ `For 1 selec the arrow ->`
  
 Drop down Target Arrow Shape
 
-`Column -> Column 4
- Mapping Type -> Discrete Mapping
- For 1 selec the arrow ->`
+`Column -> Column 4`
+ `Mapping Type -> Discrete Mapping`
+ `For 1 selec the arrow ->`
  
  To add node attributes follow steps
  
@@ -236,14 +236,14 @@ Click on Style
 Select Node attributes
 Drop down size 
 
-`Column -> Column 3
- Mapping Type -> Passthrough Mapping`
+`Column -> Column 3`
+ `Mapping Type -> Passthrough Mapping`
  
  Drop down Border Paint 
  
- `Column -> Column 5
- Mapping Type -> Continous Mapping`
- Set Border width to 25
+ `Column -> Column 5`
+` Mapping Type -> Continous Mapping`
+ `Set Border width to 25`
 
 #### Importing StringApp network
 After successful download of Cytoscape and StringApp and enhanceGraphics inside cytoscape. Follow the steps
